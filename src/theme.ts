@@ -1,13 +1,17 @@
 import { createTheme } from '@mui/material/styles';
-import { green } from '@mui/material/colors';
+import { grey, deepPurple } from '@mui/material/colors';
 
 const theme = createTheme({
   palette: {
-    primary: {
-      main: green.A700,
+    primary: deepPurple,
+    divider: deepPurple[700],
+    background: {
+        default: deepPurple[900],
+        paper: deepPurple[900],
     },
-    secondary: {
-      main: '#ff6666',
+    text: {
+        primary: '#fff',
+        secondary: grey[500],
     },
   },
 });
