@@ -4,6 +4,9 @@ import styles from './layout.module.css'
 import utilStyles from '../styles/utils.module.css'
 import Link from 'next/link'
 import Navbar from '../components/Navbar'
+
+import { Container, Box } from '@mui/material'
+
 const name = '[Your Name]'
 export const siteTitle = 'Next.js Sample Website'
 
@@ -32,7 +35,18 @@ export default function Layout({
         <meta name="twitter:card" content="summary_large_image" />
       </Head>
       <Navbar />
-      <main>{children}</main>
+      <Container maxWidth="lg">
+        <Box
+          sx={{
+            my: 4,
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+          }}
+        >{children}
+        </Box>
+        </Container>
       {!home && (
         <div className={styles.backToHome}>
           <Link href="/">
