@@ -1,0 +1,10 @@
+query {
+  systemStatus {
+    system
+    release
+    cpuUsage
+    cpuCount
+    memoryTotal
+    memoryAvailable
+  }
+}
