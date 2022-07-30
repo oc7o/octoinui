@@ -39,7 +39,7 @@ export default function StatusGrid () {
             <br />
             <CircularProgressWithLabel size="16rem" value={Math.round((parseInt(data.systemStatus.memoryAvailable) / parseInt(data.systemStatus.memoryTotal)) * 100)} />
             <Typography component="div" align='center' gutterBottom>
-                Total RAM: {data.systemStatus.memoryTotal / 8 / 1024 / 1024} MB
+                Total RAM: {data.systemStatus.memoryTotal / 1024 / 1024} MB
             </Typography>
         </Grid>
         <Grid item xs={6} md={6}>
@@ -50,7 +50,7 @@ export default function StatusGrid () {
                 <ListItem disablePadding>
                     System: {data.systemStatus.system} {data.systemStatus.release}
                 </ListItem>
-                </List>
+            </List>
         </Grid>
     </Grid>
 }
