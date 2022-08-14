@@ -7,6 +7,10 @@ import Navbar from '../components/Navbar'
 
 import { Container, Box } from '@mui/material'
 
+import { useApolloClient, useQuery } from '@apollo/client'
+import { ME_QUERY } from '../auth/graphql'
+import { useAuthContext } from '../auth/AuthContext'
+
 const name = '[Your Name]'
 export const siteTitle = 'Next.js Sample Website'
 

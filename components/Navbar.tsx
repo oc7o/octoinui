@@ -11,6 +11,7 @@ import NavbarDrawer from './NavbarDrawer'
 import Button from '@mui/material/Button';
 import NavbarAvatar from './NavbarAvatar';
 
+import { useAuthContext } from '../auth/AuthContext';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -59,6 +60,8 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 export default function SearchAppBar() {
 
+  const { state, dispatch } = useAuthContext();
+
   return (
     <Box sx={{ flexGrow: 1 }}>
       <AppBar position="static">
@@ -79,7 +82,7 @@ export default function SearchAppBar() {
             component="div"
             sx={{ flexGrow: 1, display: { xs: 'none', sm: 'block' } }}
           >
-            OctopusUI
+            Sloow
           </Typography>
           <Search>
             <SearchIconWrapper>
@@ -90,7 +93,8 @@ export default function SearchAppBar() {
               inputProps={{ 'aria-label': 'search' }}
             />
           </Search>
-          <NavbarAvatar />
+          { !state.loggedIn && <Button color="inherit" href="/login">Login</Button> }
+          { state.loggedIn && <NavbarAvatar /> }
         </Toolbar>
       </AppBar>
     </Box>
