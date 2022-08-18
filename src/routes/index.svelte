@@ -1,6 +1,6 @@
 <script>
-  import Products from "../components/Products.svelte";
-  import Carousel from "../components/Carousel.svelte";
+  import Products from "../lib/components/Products.svelte";
+  import Carousel from "../lib/components/Carousel.svelte";
 </script>
 
 <div class="flex justify-center my-16">
