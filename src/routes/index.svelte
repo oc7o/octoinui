@@ -1,7 +1,25 @@
+<script context="module" lang="ts">
+  import { browser } from "$app/env";
+  import { GQL_TestQuery } from "$houdini";
+  import type { LoadEvent } from "@sveltejs/kit";
+
+  export async function load(event: LoadEvent) {
+    await GQL_TestQuery.fetch({ event });
+    return {};
+  }
+</script>
+
 <script>
   import Products from "../lib/components/Products.svelte";
   import Carousel from "../lib/components/Carousel.svelte";
+
+  import { userStore } from "../lib/stores/userStore";
+
+  $: browser && GQL_TestQuery.fetch();
 </script>
+
+<!-- {$GQL_TestQuery.data?.systemStatus.system} -->
+{JSON.stringify($userStore)}
 
 <div class="flex justify-center my-16">
   <p

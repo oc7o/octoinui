@@ -1,0 +1,21 @@
+query MeQuery {
+  me {
+    username
+    status {
+      archived
+      verified
+      secondaryEmail
+    }
+    isStaff
+    isActive
+    isSuperuser
+    archived
+    verified
+    id
+    email
+    lastName
+    firstName
+    dateJoined
+    lastLogin
+  }
+}

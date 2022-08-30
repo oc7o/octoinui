@@ -1,0 +1,383 @@
+schema {
+  query: RootQuery
+  mutation: RootMutation
+}
+
+"""Date with time (isoformat)"""
+scalar DateTime
+
+"""Decimal (fixed-point)"""
+scalar Decimal
+
+input DjangoModelFilterInput {
+  pk: ID!
+}
+
+type DjangoModelType {
+  pk: ID!
+}
+
+scalar ExpectedError
+
+type ObtainJSONWebTokenOutputs {
+  errors: ExpectedError
+  obtainPayload: TokenDataType
+  success: Boolean!
+}
+
+type OutputInterface {
+  errors: ExpectedError
+  success: Boolean!
+}
+
+type PasswordChangeOutputs {
+  errors: ExpectedError
+  obtainPayload: TokenDataType
+  refreshToken: String
+  success: Boolean!
+  token: String
+}
+
+type PayloadType {
+  payload: TokenPayloadType!
+}
+
+type ProdctType {
+  createdAt: String!
+  description: String!
+  isActive: Boolean!
+  name: String!
+  slug: String!
+  updatedAt: String!
+  webId: String!
+}
+
+type RefreshTokenOutputs {
+  errors: ExpectedError
+  refreshPayload: RefreshedTokenType
+  success: Boolean!
+}
+
+type RefreshedTokenType {
+  payload: TokenPayloadType!
+  refreshExpiresIn: Int!
+  refreshToken: String!
+  token: String!
+}
+
+type RevokeTokenOutputs {
+  errors: ExpectedError
+  revokePayload: RevokeType
+  success: Boolean!
+}
+
+type RevokeType {
+  revoked: DateTime!
+}
+
+type RootMutation {
+  """
+  
+      Archive account and revoke refresh tokens.
+  
+      User must be verified and confirm password.
+      
+  """
+  archiveAccount(password: String!): OutputInterface!
+
+  """
+  
+      Delete account permanently or make `user.is_active=False`.
+  
+      The behavior is defined on settings.
+      Anyway user refresh tokens are revoked.
+  
+      User must be verified and confirm password.
+      
+  """
+  deleteAccount(password: String!): OutputInterface!
+
+  """
+  
+      Change account password when user knows the old password.
+  
+      A new token and refresh token are sent. User must be verified.
+      
+  """
+  passwordChange(newPassword1: String!, newPassword2: String!, oldPassword: String!): PasswordChangeOutputs!
+
+  """
+  
+      Change user password without old password.
+  
+      Receive the token that was sent by email.
+  
+      If token and new passwords are valid, update
+      user password and in case of using refresh
+      tokens, revoke all of them.
+  
+      Also, if user has not been verified yet, verify it.
+      
+  """
+  passwordReset(newPassword1: String!, newPassword2: String!, token: String!): OutputInterface!
+
+  """
+  
+      Set user password - for passwordless registration
+  
+      Receive the token that was sent by email.
+  
+      If token and new passwords are valid, set
+      user password and in case of using refresh
+      tokens, revoke all of them.
+  
+      Also, if user has not been verified yet, verify it.
+      
+  """
+  passwordSet(newPassword1: String!, newPassword2: String!, token: String!): OutputInterface!
+
+  """
+  
+      ### refreshToken to refresh your token:
+  
+      using the refresh token you already got during authorization.
+      this will obtain a brand-new token (and possibly a refresh token)
+      with renewed expiration time for non-expired tokens
+      
+  """
+  refreshToken(refreshToken: String): RefreshTokenOutputs!
+
+  """
+  
+      Register user with fields defined in the settings.
+      If the email field of the user model is part of the
+      registration fields (default), check if there is
+      no user with that email or as a secondary email.
+  
+      If it exists, it does not register the user,
+      even if the email field is not defined as unique
+      (default of the default django user model).
+  
+      When creating the user, it also creates a `UserStatus`
+      related to that user, making it possible to track
+      if the user is archived, verified and has a secondary
+      email.
+  
+      Send account verification email.
+  
+      If allowed to not verified users login, return token.
+      
+  """
+  register(email: String!, password1: String!, password2: String!, username: String!): OutputInterface!
+
+  """
+  
+      Remove user secondary email.
+  
+      Require password confirmation.
+      
+  """
+  removeSecondaryEmail(password: String!): OutputInterface!
+
+  """
+  
+      Sends activation email.
+  
+      It is called resend because theoretically
+      the first activation email was sent when
+      the user registered.
+  
+      If there is no user with the requested email,
+      a successful response is returned.
+      
+  """
+  resendActivationEmail(email: String!): OutputInterface!
+
+  """
+  
+      Suspends a refresh token
+      
+  """
+  revokeToken(refreshToken: String!): RevokeTokenOutputs!
+
+  """
+  
+      Send password reset email.
+  
+      For non verified users, send an activation
+      email instead.
+  
+      Accepts both primary and secondary email.
+  
+      If there is no user with the requested email,
+      a successful response is returned.
+      
+  """
+  sendPasswordResetEmail(email: String!): OutputInterface!
+
+  """
+  
+      Send activation to secondary email.
+  
+      User must be verified and confirm password.
+      
+  """
+  sendSecondaryEmailActivation(password: String!): OutputInterface!
+
+  """
+  
+      Swap between primary and secondary emails.
+  
+      Require password confirmation.
+      
+  """
+  swapEmails(password: String!): OutputInterface!
+
+  """
+  
+      Obtain JSON web token for given user.
+  
+      Allow to perform login with different fields,
+      and secondary email if set. The fields are
+      defined on settings.
+  
+      Not verified users can log in by default. This
+      can be changes on settings.
+  
+      If user is archived, make it unarchived and
+      return `unarchiving=True` on OutputBase.
+      
+  """
+  tokenAuth(password: String!, username: String!): ObtainJSONWebTokenOutputs!
+
+  """
+  
+      Update user model fields, defined on settings.
+  
+      User must be verified.
+      
+  """
+  updateAccount(firstName: String, lastName: String): OutputInterface!
+
+  """
+  
+      Verify user account.
+  
+      Receive the token that was sent by email.
+      If the token is valid, make the user verified
+      by making the `user.status.verified` field true.
+      
+  """
+  verifyAccount(token: String!): OutputInterface!
+
+  """
+  
+      Verify user secondary email.
+  
+      Receive the token that was sent by email.
+      User is already verified when using this mutation.
+  
+      If the token is valid, add the secondary email
+      to `user.status.secondary_email` field.
+  
+      Note that until the secondary email is verified,
+      it has not been saved anywhere beyond the token,
+      so it can still be used to create a new account.
+      After being verified, it will no longer be available.
+      
+  """
+  verifySecondaryEmail(token: String!): OutputInterface!
+
+  """
+  
+      Checks if a token is not expired and correct
+      
+  """
+  verifyToken(token: String!): VerifyTokenOutputs!
+}
+
+type RootQuery {
+  me: UserType
+  products: [ProdctType!]!
+  publicUser: UserType
+  systemStatus: SystemStatus!
+  user(pk: ID): UserType
+  users(filters: UserFilter): [UserType!]!
+}
+
+type SystemStatus {
+  cpuCount: Int!
+  cpuFreq: String!
+  cpuUsage: Decimal!
+  machine: String!
+  memoryAvailable: Decimal!
+  memoryTotal: Decimal!
+  processor: String!
+  release: String!
+  system: String!
+  version: String!
+}
+
+type TokenDataType {
+  payload: TokenPayloadType!
+  refreshExpiresIn: Int
+  refreshToken: String
+  token: String!
+}
+
+type TokenPayloadType {
+  exp: Int!
+  origIat: Int!
+  username: String!
+}
+
+input UserFilter {
+  dateJoined: DateTime
+  email: String
+  firstName: String
+  id: ID
+  isActive: Boolean
+  isStaff: Boolean
+  isSuperuser: Boolean
+  lastLogin: DateTime
+  lastName: String
+  logentrySet: DjangoModelFilterInput
+  status: UserStatusFilter
+  username: String
+}
+
+input UserStatusFilter {
+  archived: Boolean
+  secondaryEmail: String
+  verified: Boolean
+}
+
+type UserStatusType {
+  archived: Boolean!
+  secondaryEmail: String
+  verified: Boolean!
+}
+
+type UserType {
+  archived: Boolean!
+  dateJoined: DateTime!
+  email: String!
+  firstName: String!
+  id: ID!
+  isActive: Boolean!
+  isStaff: Boolean!
+  isSuperuser: Boolean!
+  lastLogin: DateTime
+  lastName: String!
+  logentrySet: [DjangoModelType!]!
+  secondaryEmail: String
+  status: UserStatusType
+  username: String!
+  verified: Boolean!
+}
+
+type VerifyTokenOutputs {
+  errors: ExpectedError
+  success: Boolean!
+  verifyPayload: PayloadType
+}
