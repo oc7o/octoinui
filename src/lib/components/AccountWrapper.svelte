@@ -16,20 +16,22 @@
   $: browser && GQL_MeQuery.fetch();
 
   if (get(authStore).loggedIn) {
-    GQL_MeQuery.fetch();
-
-    const data = $GQL_MeQuery.data;
-    if (data?.me === null) {
-      // TODO: Here goes refresh token
-      authStore.set({
-        token: null,
-        loggedIn: false,
-      });
-    } else if (data !== undefined && data !== null) {
-      userStore.set({
-        ...data.me,
-      });
-    }
+    const fetch = async () => {
+      await GQL_MeQuery.fetch();
+      const data = $GQL_MeQuery.data;
+      if (data?.me === null) {
+        // TODO: Here goes refresh token
+        authStore.set({
+          token: null,
+          loggedIn: false,
+        });
+      } else if (data !== undefined && data !== null) {
+        userStore.set({
+          ...data.me,
+        });
+      }
+    };
+    fetch();
   }
 </script>
 

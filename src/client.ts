@@ -2,6 +2,7 @@
 import { HoudiniClient, type RequestHandlerArgs } from '$houdini';
 import { authStore } from "./lib/stores/authStore";
 import { get } from 'svelte/store'
+// import { env } from "$lib/env";
 
 async function fetchQuery({
 	fetch,
@@ -14,12 +15,12 @@ async function fetchQuery({
 	variables.token = token;
 	
 	
-	const url = import.meta.env.VITE_GRAPHQL_ENDPOINT || 'https://api.sloow.de/graphql';
+	const url = import.meta.env.VITE_GRAPHQL_ENDPOINT || 'http://localhost:8000/graphql';
 	const result = await fetch(url, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
-			Authorization: `JWT ${token}`
+			Authorization: token ? `JWT ${token}` : ''
 		},
 		body: JSON.stringify({
 			query: text,

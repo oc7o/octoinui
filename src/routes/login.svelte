@@ -1,6 +1,9 @@
 <script lang="ts">
   import { authStore } from "../lib/stores/authStore";
   import { GQL_tokenAuth } from "$houdini";
+  import { goto } from "$app/navigation";
+  import { userStore } from "../lib/stores/userStore";
+  import { GQL_MeQuery } from "$houdini";
 
   var username = "";
   var password = "";
@@ -13,11 +16,15 @@
       },
     });
     const data = $GQL_tokenAuth.data;
-    if (data?.tokenAuth?.obtainPayload?.token) {
+
+    if (data?.tokenAuth?.token) {
       authStore.set({
-        token: data?.tokenAuth?.obtainPayload?.token,
+        token: data?.tokenAuth?.token,
         loggedIn: true,
       });
+      // may fetch user here
+
+      goto("/");
     }
   };
 </script>

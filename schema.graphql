@@ -3,39 +3,57 @@ schema {
   mutation: RootMutation
 }
 
+type CategoryType {
+  name: String!
+  slug: String!
+}
+
 """Date with time (isoformat)"""
 scalar DateTime
 
-"""Decimal (fixed-point)"""
-scalar Decimal
-
-input DjangoModelFilterInput {
-  pk: ID!
+type DeleteType {
+  deleted: Boolean!
 }
 
-type DjangoModelType {
-  pk: ID!
+"""The `JSON` scalar type represents JSON values as specified by ECMA-404"""
+scalar JSON
+
+type MeType {
+  dateJoined: DateTime!
+  email: String!
+  firstName: String!
+  isActive: Boolean!
+  isStaff: Boolean!
+  isSuperuser: Boolean!
+  lastLogin: DateTime!
+  lastName: String!
+  profileImage: String!
+  username: String!
 }
 
-scalar ExpectedError
-
-type ObtainJSONWebTokenOutputs {
-  errors: ExpectedError
-  obtainPayload: TokenDataType
-  success: Boolean!
+type MediaType {
+  imgUrl: String!
 }
 
-type OutputInterface {
-  errors: ExpectedError
-  success: Boolean!
+type OrderInvoiceType {
+  createdAt: DateTime!
+  expiredAt: DateTime!
+  invoiceId: String!
+  invoiceUrl: String!
+  price: Float!
 }
 
-type PasswordChangeOutputs {
-  errors: ExpectedError
-  obtainPayload: TokenDataType
-  refreshToken: String
-  success: Boolean!
-  token: String
+type OrderProductInventoryType {
+  productInventory: ProductInventoryType!
+  quantity: Int!
+}
+
+type OrderType {
+  id: Int!
+  invoices: [OrderInvoiceType!]!
+  orderProductInventories: [OrderProductInventoryType!]!
+  totalPrice: Float!
+  totalQuantity: Int!
 }
 
 type PayloadType {
@@ -43,19 +61,35 @@ type PayloadType {
 }
 
 type ProdctType {
+  category: CategoryType!
   createdAt: String!
+  defaultImage: MediaType
   description: String!
   isActive: Boolean!
   name: String!
+  product: [ProductInventoryType!]!
   slug: String!
   updatedAt: String!
   webId: String!
 }
 
-type RefreshTokenOutputs {
-  errors: ExpectedError
-  refreshPayload: RefreshedTokenType
-  success: Boolean!
+type ProductAttributeType {
+  name: String!
+}
+
+type ProductAttributeValueType {
+  attributeValue: String!
+  productAttribute: ProductAttributeType!
+}
+
+type ProductInventoryType {
+  attributeValues: [ProductAttributeValueType!]!
+  attributes: JSON!
+  isActive: Boolean!
+  isDefault: Boolean!
+  product: ProdctType!
+  sku: String!
+  upc: String!
 }
 
 type RefreshedTokenType {
@@ -65,253 +99,28 @@ type RefreshedTokenType {
   token: String!
 }
 
-type RevokeTokenOutputs {
-  errors: ExpectedError
-  revokePayload: RevokeType
-  success: Boolean!
-}
-
-type RevokeType {
-  revoked: DateTime!
-}
-
 type RootMutation {
-  """
-  
-      Archive account and revoke refresh tokens.
-  
-      User must be verified and confirm password.
-      
-  """
-  archiveAccount(password: String!): OutputInterface!
-
-  """
-  
-      Delete account permanently or make `user.is_active=False`.
-  
-      The behavior is defined on settings.
-      Anyway user refresh tokens are revoked.
-  
-      User must be verified and confirm password.
-      
-  """
-  deleteAccount(password: String!): OutputInterface!
-
-  """
-  
-      Change account password when user knows the old password.
-  
-      A new token and refresh token are sent. User must be verified.
-      
-  """
-  passwordChange(newPassword1: String!, newPassword2: String!, oldPassword: String!): PasswordChangeOutputs!
-
-  """
-  
-      Change user password without old password.
-  
-      Receive the token that was sent by email.
-  
-      If token and new passwords are valid, update
-      user password and in case of using refresh
-      tokens, revoke all of them.
-  
-      Also, if user has not been verified yet, verify it.
-      
-  """
-  passwordReset(newPassword1: String!, newPassword2: String!, token: String!): OutputInterface!
-
-  """
-  
-      Set user password - for passwordless registration
-  
-      Receive the token that was sent by email.
-  
-      If token and new passwords are valid, set
-      user password and in case of using refresh
-      tokens, revoke all of them.
-  
-      Also, if user has not been verified yet, verify it.
-      
-  """
-  passwordSet(newPassword1: String!, newPassword2: String!, token: String!): OutputInterface!
-
-  """
-  
-      ### refreshToken to refresh your token:
-  
-      using the refresh token you already got during authorization.
-      this will obtain a brand-new token (and possibly a refresh token)
-      with renewed expiration time for non-expired tokens
-      
-  """
-  refreshToken(refreshToken: String): RefreshTokenOutputs!
-
-  """
-  
-      Register user with fields defined in the settings.
-      If the email field of the user model is part of the
-      registration fields (default), check if there is
-      no user with that email or as a secondary email.
-  
-      If it exists, it does not register the user,
-      even if the email field is not defined as unique
-      (default of the default django user model).
-  
-      When creating the user, it also creates a `UserStatus`
-      related to that user, making it possible to track
-      if the user is archived, verified and has a secondary
-      email.
-  
-      Send account verification email.
-  
-      If allowed to not verified users login, return token.
-      
-  """
-  register(email: String!, password1: String!, password2: String!, username: String!): OutputInterface!
-
-  """
-  
-      Remove user secondary email.
-  
-      Require password confirmation.
-      
-  """
-  removeSecondaryEmail(password: String!): OutputInterface!
-
-  """
-  
-      Sends activation email.
-  
-      It is called resend because theoretically
-      the first activation email was sent when
-      the user registered.
-  
-      If there is no user with the requested email,
-      a successful response is returned.
-      
-  """
-  resendActivationEmail(email: String!): OutputInterface!
-
-  """
-  
-      Suspends a refresh token
-      
-  """
-  revokeToken(refreshToken: String!): RevokeTokenOutputs!
-
-  """
-  
-      Send password reset email.
-  
-      For non verified users, send an activation
-      email instead.
-  
-      Accepts both primary and secondary email.
-  
-      If there is no user with the requested email,
-      a successful response is returned.
-      
-  """
-  sendPasswordResetEmail(email: String!): OutputInterface!
-
-  """
-  
-      Send activation to secondary email.
-  
-      User must be verified and confirm password.
-      
-  """
-  sendSecondaryEmailActivation(password: String!): OutputInterface!
-
-  """
-  
-      Swap between primary and secondary emails.
-  
-      Require password confirmation.
-      
-  """
-  swapEmails(password: String!): OutputInterface!
-
-  """
-  
-      Obtain JSON web token for given user.
-  
-      Allow to perform login with different fields,
-      and secondary email if set. The fields are
-      defined on settings.
-  
-      Not verified users can log in by default. This
-      can be changes on settings.
-  
-      If user is archived, make it unarchived and
-      return `unarchiving=True` on OutputBase.
-      
-  """
-  tokenAuth(password: String!, username: String!): ObtainJSONWebTokenOutputs!
-
-  """
-  
-      Update user model fields, defined on settings.
-  
-      User must be verified.
-      
-  """
-  updateAccount(firstName: String, lastName: String): OutputInterface!
-
-  """
-  
-      Verify user account.
-  
-      Receive the token that was sent by email.
-      If the token is valid, make the user verified
-      by making the `user.status.verified` field true.
-      
-  """
-  verifyAccount(token: String!): OutputInterface!
-
-  """
-  
-      Verify user secondary email.
-  
-      Receive the token that was sent by email.
-      User is already verified when using this mutation.
-  
-      If the token is valid, add the secondary email
-      to `user.status.secondary_email` field.
-  
-      Note that until the secondary email is verified,
-      it has not been saved anywhere beyond the token,
-      so it can still be used to create a new account.
-      After being verified, it will no longer be available.
-      
-  """
-  verifySecondaryEmail(token: String!): OutputInterface!
-
-  """
-  
-      Checks if a token is not expired and correct
-      
-  """
-  verifyToken(token: String!): VerifyTokenOutputs!
+  createOrder(cart: JSON!): OrderType!
+  deleteTokenCookie: DeleteType!
+  refreshToken(refreshToken: String, token: String): RefreshedTokenType!
+  setupBtcpayClient(code: String!, host: String!): Boolean!
+  tokenAuth(password: String!, refreshToken: String, token: String, username: String!): TokenDataType!
+  verifyToken(token: String!): PayloadType!
 }
 
 type RootQuery {
-  me: UserType
+  btcpayClientHost: String!
+  invoices: [JSON!]!
+  me: MeType
+  productByWebId(webId: String!): ProdctType
+  productInventoriesBySkus(skus: [String!]!): [ProductInventoryType!]!
+  productInventoryBySku(sku: String!): ProductInventoryType
   products: [ProdctType!]!
-  publicUser: UserType
   systemStatus: SystemStatus!
-  user(pk: ID): UserType
-  users(filters: UserFilter): [UserType!]!
 }
 
 type SystemStatus {
-  cpuCount: Int!
-  cpuFreq: String!
-  cpuUsage: Decimal!
   machine: String!
-  memoryAvailable: Decimal!
-  memoryTotal: Decimal!
   processor: String!
   release: String!
   system: String!
@@ -329,55 +138,4 @@ type TokenPayloadType {
   exp: Int!
   origIat: Int!
   username: String!
-}
-
-input UserFilter {
-  dateJoined: DateTime
-  email: String
-  firstName: String
-  id: ID
-  isActive: Boolean
-  isStaff: Boolean
-  isSuperuser: Boolean
-  lastLogin: DateTime
-  lastName: String
-  logentrySet: DjangoModelFilterInput
-  status: UserStatusFilter
-  username: String
-}
-
-input UserStatusFilter {
-  archived: Boolean
-  secondaryEmail: String
-  verified: Boolean
-}
-
-type UserStatusType {
-  archived: Boolean!
-  secondaryEmail: String
-  verified: Boolean!
-}
-
-type UserType {
-  archived: Boolean!
-  dateJoined: DateTime!
-  email: String!
-  firstName: String!
-  id: ID!
-  isActive: Boolean!
-  isStaff: Boolean!
-  isSuperuser: Boolean!
-  lastLogin: DateTime
-  lastName: String!
-  logentrySet: [DjangoModelType!]!
-  secondaryEmail: String
-  status: UserStatusType
-  username: String!
-  verified: Boolean!
-}
-
-type VerifyTokenOutputs {
-  errors: ExpectedError
-  success: Boolean!
-  verifyPayload: PayloadType
 }

@@ -1,0 +1,10 @@
+query productInventoryBySku($sku: String!) {
+  productInventoryBySku(sku: $sku) {
+    sku
+    attributes
+    product {
+      name
+      webId
+    }
+  }
+}

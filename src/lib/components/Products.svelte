@@ -1,25 +1,78 @@
 <!-- For later configuration: https://codepen.io/kathykato/pen/KRQOKY -->
-<script>
-  import { onMount } from "svelte";
-  onMount(() => {
-    const imgContent = document.querySelectorAll(".img-content-hover");
+<script context="module" lang="ts">
+  import { browser } from "$app/env";
+  import { GQL_ProductsQuery } from "$houdini";
+  import type { LoadEvent } from "@sveltejs/kit";
 
-    function showImgContent(e) {
-      for (var i = 0; i < imgContent.length; i++) {
-        let x = e.pageX;
-        let y = e.pageY;
-        imgContent[i].style.transform = `translate3d(${x}px, ${y}px, 0)`;
-      }
-    }
-
-    document.addEventListener("mousemove", showImgContent);
-  });
+  export async function load(event: LoadEvent) {
+    await GQL_ProductsQuery.fetch({ event });
+    return {};
+  }
 </script>
 
-<section class="gallery">
+<script lang="ts">
+  import { onMount } from "svelte";
+  import { goto } from "$app/navigation";
+
+  $: browser && GQL_ProductsQuery.fetch();
+
+  const hover = async () => {
+    if (browser) await GQL_ProductsQuery.fetch();
+    if (browser && !$GQL_ProductsQuery.isFetching) {
+      // Runs before data fetch...
+      const imgContent = document.querySelectorAll(".img-content-hover");
+
+      function showImgContent(e: MouseEvent) {
+        for (var i = 0; i < imgContent.length; i++) {
+          let x = e.pageX;
+          let y = e.pageY;
+          imgContent[i].style.transform = `translate3d(${x}px, ${y}px, 0)`;
+        }
+      }
+
+      document.addEventListener("mousemove", showImgContent);
+    }
+  };
+  hover();
+
+  const goToProduct = (webId: string) => {
+    goto(`/products/${webId}`);
+  };
+</script>
+
+<section class="gallery" on:focus={hover}>
   <div class="container">
     <div class="grid">
-      <div class="column-xs-12 column-md-4">
+      {#if !$GQL_ProductsQuery.isFetching && $GQL_ProductsQuery.data && $GQL_ProductsQuery.data?.products?.length}
+        <!-- {JSON.stringify($GQL_ProductsQuery)} -->
+        {#if $GQL_ProductsQuery.data?.products?.length === 0}
+          <p class="text-2xl text-center">No products found</p>
+        {:else}
+          {#each $GQL_ProductsQuery.data?.products as product}
+            <div
+              class="column-xs-12 column-md-4"
+              on:click={() => {
+                goToProduct(product.webId);
+              }}
+            >
+              <figure class="img-container">
+                <figcaption class="img-content">
+                  <h2 class="title">{product.name}</h2>
+                  <h3 class="category">599€</h3>
+                </figcaption>
+                <img src={product.defaultImage?.imgUrl} alt="..." />
+                <span class="img-content-hover">
+                  <h2 class="title">{product.name}</h2>
+                  <h3 class="category">599€</h3>
+                </span>
+              </figure>
+            </div>
+          {/each}
+        {/if}
+      {/if}
+
+      <!--
+      <div class="column-xs-12 column-md-4" href="">
         <figure class="img-container">
           <figcaption class="img-content">
             <h2 class="title">Smart Watch</h2>
@@ -98,6 +151,7 @@
           </span>
         </figure>
       </div>
+       -->
     </div>
   </div>
 </section>

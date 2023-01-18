@@ -12,7 +12,13 @@
 		"paths": {
             "$houdini": [
                 "./$houdini/"
-            ]
+            ],
+			"$lib": [
+				"./src/lib/"
+			],
+			"$lib/*": [
+				"./src/lib/*"
+			],
         }
 	}
 }

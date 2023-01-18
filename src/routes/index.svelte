@@ -25,12 +25,12 @@
   <p
     class="box-decoration-clone bg-gradient-to-r from-lime-500 to-emerald-500 text-white text-5xl font-bold px-12 py-3"
   >
-    Unsere Top Künstler
+    Unsere Top Verkäufer des Monats
   </p>
 </div>
 
 <!-- <div class="mx-36 my-12"> -->
-<Carousel />
+<!-- <Carousel /> -->
 <!-- </div> -->
 
 <div class="flex justify-center my-16">

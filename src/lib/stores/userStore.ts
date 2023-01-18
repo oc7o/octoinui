@@ -5,14 +5,12 @@ interface UserStore {
     isStaff: boolean;
     isActive: boolean;
     isSuperuser: boolean;
-    archived: boolean;
-    verified: boolean;
-    id: string;
     email: string;
     lastName: string;
     firstName: string;
     dateJoined: string;
     lastLogin: string;
+    profileImage: string;
 }
 
 export const userStore = writable<UserStore | null>(null);

@@ -2,13 +2,13 @@
     "name": "octoinui",
     "version": "0.0.1",
     "scripts": {
-        "dev": "vite dev",
+        "dev": "vite dev --host '0.0.0.0'",
         "build": "vite build",
         "package": "svelte-kit package",
         "preview": "vite preview",
         "check": "svelte-check --tsconfig ./tsconfig.json",
         "check:watch": "svelte-check --tsconfig ./tsconfig.json --watch",
-        "generate": "houdini generate"
+        "generate": "houdini generate -p"
     },
     "devDependencies": {
         "@kitql/vite-plugin-watch-and-run": "^0.4.2",
@@ -30,7 +30,9 @@
     "dependencies": {
         "@kitql/all-in": "^0.7.7",
         "daisyui": "^2.24.0",
+        "dotenv": "^16.0.2",
         "graphql": "^16.6.0",
+        "path-browserify": "^1.0.1",
         "svelte-heros": "^2.3.3",
         "tw-elements": "^1.0.0-alpha12"
     }

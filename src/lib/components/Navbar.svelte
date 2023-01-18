@@ -8,7 +8,7 @@
   <!-- Navbar Start -->
   <div class="navbar-start">
     <div class="dropdown">
-      <span tabindex="0" class="btn btn-ghost btn-circle">
+      <label for="side-drawer" class="btn btn-primary drawer-button">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
@@ -21,7 +21,7 @@
             d="M4 6h16M4 12h16M4 18h16"
           /></svg
         >
-      </span>
+      </label>
       <ul
         tabindex="0"
         class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
@@ -88,7 +88,7 @@
           <span class="font-bold text-lg">8 Items</span>
           <span class="text-info">Subtotal: $999</span>
           <div class="card-actions">
-            <button class="btn btn-primary btn-block">View cart</button>
+            <a class="btn btn-primary btn-block" href="/cart">View cart</a>
           </div>
         </div>
       </div>
@@ -100,7 +100,7 @@
       <div class="dropdown dropdown-end">
         <span tabindex="0" class="btn btn-ghost btn-circle avatar">
           <div class="w-10 rounded-full">
-            <img src="https://placeimg.com/80/80/people" />
+            <img src={$userStore?.profileImage} />
           </div>
         </span>
         <ul
@@ -111,6 +111,7 @@
             <a class="justify-between"> Profile </a>
           </li>
           <li><a>Settings</a></li>
+          <li><a href="/new-product">Create a New Produkt</a></li>
           <li><a href="/logout">Logout</a></li>
         </ul>
       </div>
