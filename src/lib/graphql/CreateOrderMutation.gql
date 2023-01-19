@@ -1,0 +1,23 @@
+mutation createOrder($cart: JSON!) {
+  createOrder(cart: $cart) {
+    id
+    invoices {
+      invoiceId
+      invoiceUrl
+      price
+      createdAt
+      expiredAt
+    }
+    orderProductInventories {
+      productInventory {
+        product {
+          name
+          webId
+        }
+      }
+      quantity
+    }
+    totalPrice
+    totalQuantity
+  }
+}

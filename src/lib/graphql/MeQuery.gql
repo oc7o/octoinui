@@ -1,0 +1,14 @@
+query MeQuery {
+  me {
+    username
+    isStaff
+    isActive
+    isSuperuser
+    email
+    lastName
+    firstName
+    dateJoined
+    lastLogin
+    profileImage
+  }
+}
