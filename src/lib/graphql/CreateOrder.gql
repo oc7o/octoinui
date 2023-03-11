@@ -1,0 +1,30 @@
+mutation createOrder(
+	$basketWebId: String!
+	$firstname: String!
+	$lastname: String!
+	$city: String!
+	$street: String!
+	$zipCode: String!
+	$email: String!
+	$captchaWebId: String!
+	$captchaText: String!
+) {
+	createOrder(
+		basketWebId: $basketWebId
+		firstname: $firstname
+		lastname: $lastname
+		city: $city
+		street: $street
+		zipCode: $zipCode
+		email: $email
+		captchaWebId: $captchaWebId
+		captchaText: $captchaText
+	) {
+		firstname
+		lastname
+		invoice {
+			invoiceId
+			invoiceUrl
+		}
+	}
+}

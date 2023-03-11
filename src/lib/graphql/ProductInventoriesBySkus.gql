@@ -1,0 +1,12 @@
+query productInventoriesBySkus($skus: [String!]!) {
+  productInventoriesBySkus(skus: $skus) {
+    sku
+    product {
+      name
+      webId
+      defaultImage {
+        imgUrl
+      }
+    }
+  }
+}
