@@ -1,0 +1,6 @@
+query UserPage($username: String!) {
+	user(username: $username) {
+		username
+		profileImage
+	}
+}
