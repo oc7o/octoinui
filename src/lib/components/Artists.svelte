@@ -1,4 +1,59 @@
-<div
+<script>
+	import { graphql } from '$houdini';
+
+	const store = graphql(`
+		query top20UsersQuery {
+			top20Users {
+				username
+				isSuperuser
+				isStaff
+				profileImage
+			}
+		}
+	`);
+</script>
+
+<!-- {JSON.stringify($store.data?.top20Users)} -->
+
+<!-- {#if $store.data?.top20Users && $store.data?.top20Users.length != 0}
+	<div class="carousel carousel-center rounded-box">
+		{#each $store.data?.top20Users as user}
+			<div class="carousel-item h-full w-48">
+				<a href="/users/">
+					<img src={user.profileImage} alt="Pizza" />
+				</a>
+			</div>
+		{/each}
+	</div>
+{/if} -->
+
+{#if $store.data?.top20Users && $store.data?.top20Users.length != 0}
+	<div class="carousel carousel-center rounded-box">
+		{#each $store.data?.top20Users as user}
+			<div class="carousel-item mx-4 card bg-base-100 shadow-xl w-96 h-[32rem]">
+				<figure>
+					<img src={user.profileImage} class="w-full h-96 object-cover object-top" />
+				</figure>
+				<div class="stats stats-vertical lg:stats-horizontal">
+					<div class="stat">
+						<div class="stat-title">Sold this month</div>
+						<div class="stat-value">31K</div>
+						<div class="stat-desc">All time:</div>
+					</div>
+
+					<div class="stat">
+						<div class="stat-title">{user.username}</div>
+						<div class="stat-value">
+							<a href={`/users/${user.username}`} class="btn btn-primary">View</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		{/each}
+	</div>
+{/if}
+
+<!-- <div
   id="carouselExampleCaptions"
   class="carousel slide relative"
   data-bs-ride="carousel"
@@ -86,4 +141,4 @@
     />
     <span class="visually-hidden">Next</span>
   </button>
-</div>
+</div> -->
