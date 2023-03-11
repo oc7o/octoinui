@@ -1,33 +1,23 @@
+import { HoudiniClient, type RequestHandler } from '$houdini';
+// import { SubscriptonClient} from 'subscriptions-transport-ws';
+import { browser } from '$app/environment';
+import { getSession } from '$houdini';
 
-import { HoudiniClient, type RequestHandlerArgs } from '$houdini';
-import { authStore } from "./lib/stores/authStore";
-import { get } from 'svelte/store'
-
-async function fetchQuery({
-	fetch,
-	text = '',
-	variables = {},
-	session,
-	metadata
-}: RequestHandlerArgs) {	
-	const token = get(authStore).token;
-	variables.token = token;
-	
-	
-	const url = import.meta.env.VITE_GRAPHQL_ENDPOINT || 'http://localhost:8000/graphql';
+const requestHandler: RequestHandler = async ({ fetch, text = '', variables = {}, session }) => {
+	const url = 'http://localhost:8000/graphql';
 	const result = await fetch(url, {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
-			Authorization: token ? `JWT ${token}` : ''
+			Authorization: session?.auth?.token ? `JWT ${session?.auth?.token}` : '' // Bearer ?
 		},
 		body: JSON.stringify({
 			query: text,
 			variables
 		})
 	});
-	
-	return await result.json();
-}
 
-export default new HoudiniClient(fetchQuery);
+	return await result.json();
+};
+
+export default new HoudiniClient(requestHandler);
