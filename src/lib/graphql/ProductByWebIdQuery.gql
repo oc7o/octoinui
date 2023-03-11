@@ -1,22 +1,22 @@
 query productByWebId($webId: String!) {
-  productByWebId(webId: $webId) {
-    webId
-    name
-    slug
-    description
-    isActive
-    createdAt
-    updatedAt
-    defaultImage {
-      imgUrl
-    }
-    category {
-      name
-      slug
-    }
-    product {
-      sku
-      attributes
-    }
-  }
+	productByWebId(webId: $webId) {
+		webId
+		name
+		slug
+		description
+		isActive
+		createdAt
+		updatedAt
+		defaultImage {
+			imgUrl
+		}
+		category {
+			name
+			slug
+		}
+		product {
+			sku
+			attributes
+		}
+	}
 }
