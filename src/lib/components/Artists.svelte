@@ -42,7 +42,7 @@
 					</div>
 
 					<div class="stat">
-						<div class="stat-title">{user.username}</div>
+						<div class="stat-title"><b>{user.username}</b></div>
 						<div class="stat-value">
 							<a href={`/users/${user.username}`} class="btn btn-primary">View</a>
 						</div>

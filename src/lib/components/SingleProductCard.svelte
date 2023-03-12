@@ -138,7 +138,7 @@
 		</div>
 		<div class="card__footer">
 			<div class="recommend">
-				<p>Inserted by</p>
+				<p>Inserted by <b>{$productQuery.data?.productByWebId?.owner.username}</b></p>
 				<!-- <h3>{$productQuery.data?.productByWebId?.owner.username}</h3> -->
 			</div>
 			<div class="action">
