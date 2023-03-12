@@ -6,7 +6,10 @@
 
 	import { browser } from '$app/environment';
 
-	import { load_ProductsQuery } from '$houdini';
+	import { searchStore } from '$lib/stores';
+
+	import { load_ProductsQuery, CachePolicy } from '$houdini';
+	import Artists from './Artists.svelte';
 
 	/* @type { import('./$houdini').ProductsQueryVariables } */
 	// export const _ProductsQueryVariables = ({ props }) => {
@@ -17,14 +20,15 @@
 
 	$: limit = 12;
 	$: offset = 0;
+	let search: string | null = null;
 
 	export const _ProductsQueryVariables = ({}) => {
-		return { user: props?.user ? props.user : null, offset: offset, limit: limit };
+		return { user: props?.user ? props.user : null, offset, limit, search };
 	};
 
 	$: productsQuery = graphql(`
-		query ProductsQuery($user: String = null, $offset: Int, $limit: Int) {
-			products(user: $user, offset: $offset, limit: $limit) {
+		query ProductsQuery($user: String = null, $offset: Int, $limit: Int, $search: String = null) {
+			products(user: $user, offset: $offset, limit: $limit, search: $search) @paginate {
 				items {
 					webId
 					name
@@ -34,9 +38,22 @@
 						imgUrl
 					}
 				}
+				totalItemsCount
 			}
 		}
 	`);
+
+	searchStore.subscribe(async (value) => {
+		search = value;
+		if ($productsQuery?.data != null && $productsQuery?.data.products) {
+			offset = 0;
+			const r = await productsQuery.fetch({
+				policy: CachePolicy.NetworkOnly,
+				variables: { user: props?.user ? props.user : null, search, offset, limit }
+			});
+			console.log('rrrrr', r);
+		}
+	});
 
 	// const hover = async () => {
 
@@ -62,9 +79,11 @@
 
 <!-- {JSON.stringify($productsQuery)} -->
 
+{search}
+
 <section class="gallery" on:mousemove={showImgContent}>
 	<div class="container">
-		{#if !$productsQuery != null && $productsQuery.data && $productsQuery.data?.products && $productsQuery.data?.products?.items.length}
+		{#if $productsQuery?.data != null && $productsQuery?.data.products && $productsQuery.data?.products?.items.length}
 			<div class="grid">
 				<!-- {JSON.stringify($GQL_ProductsQuery)} -->
 				{#if $productsQuery.data?.products?.items.length === 0}
@@ -97,14 +116,21 @@
 					<button
 						class="btn"
 						on:click={() => {
-							offset -= limit;
+							if (offset > 0) {
+								offset -= limit;
+								productsQuery.loadNextPage({ offset: offset, limit: limit });
+							}
 						}}>«</button
 					>
 					<button class="btn">Page {((offset / limit) >> 0) + 1}</button>
 					<button
 						class="btn"
 						on:click={() => {
-							offset += limit;
+							if ($productsQuery.data.products.totalItemsCount >= offset + limit) {
+								offset += limit;
+
+								productsQuery.loadNextPage({ offset: offset, limit: limit });
+							}
 						}}>»</button
 					>
 				</div>

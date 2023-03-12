@@ -1,5 +1,9 @@
 <script lang="ts">
 	import { graphql } from '$houdini';
+	import { browser } from '$app/environment';
+	import { searchStore } from '$lib/stores';
+
+	let searchModalInput = '';
 
 	$: meQuery = graphql(`
 		query NavbarQuery {
@@ -17,9 +21,85 @@
 			}
 		}
 	`);
+
+	$: basketData = getBasket();
+
+	async function getBasket() {
+		if (!browser) {
+			return {};
+		}
+
+		let cartWebId;
+
+		if (localStorage.getItem('cart')) {
+			cartWebId = localStorage.getItem('cart') as string;
+		} else {
+			const r = await fetch('/api/basket/create');
+			const c = await r.json();
+			cartWebId = c.createBasket.webId;
+			localStorage.setItem('cart', JSON.stringify(cartWebId).replace(/['"]+/g, ''));
+		}
+
+		const response = await fetch('/api/basket', {
+			method: 'POST',
+			body: JSON.stringify(cartWebId)
+		});
+
+		const cart = await response.json();
+
+		return cart;
+	}
 </script>
 
 <!-- {JSON.stringify($meQuery?.data?.me)} -->
+
+<!-- Search Modal -->
+<input type="checkbox" id="search-modal" class="modal-toggle" />
+<label for="earch-modal" class="modal cursor-pointer">
+	<label class="modal-box relative" for="">
+		<label
+			class="btn btn-sm btn-error btn-circle absolute right-2 top-2"
+			for="search-modal"
+			on:mousedown={() => {
+				searchStore.set(null);
+				searchModalInput = '';
+			}}>✕</label
+		>
+		<div class="btn-group w-full">
+			<input
+				type="text"
+				placeholder="Search..."
+				class="input input-bordered w-full"
+				bind:value={searchModalInput}
+			/>
+
+			<label
+				for="search-modal"
+				class="btn btn-primary"
+				on:mousedown={() => {
+					if (searchModalInput !== '') {
+						searchStore.set(searchModalInput);
+					} else {
+						searchStore.set(null);
+					}
+				}}
+				><svg
+					xmlns="http://www.w3.org/2000/svg"
+					class="h-5 w-5"
+					fill="none"
+					viewBox="0 0 24 24"
+					stroke="currentColor"
+					><path
+						stroke-linecap="round"
+						stroke-linejoin="round"
+						stroke-width="2"
+						d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+					/></svg
+				></label
+			>
+		</div>
+	</label>
+</label>
 
 <div class="navbar bg-gradient-to-r from-lime-500 to-emerald-500">
 	<!-- ⬆ text-white -->
@@ -61,7 +141,7 @@
 	<!-- Navbar End -->
 	<div class="navbar-end">
 		<!-- Search Button -->
-		<button class="btn btn-ghost btn-circle">
+		<label for="search-modal" class="btn btn-ghost btn-circle">
 			<svg
 				xmlns="http://www.w3.org/2000/svg"
 				class="h-5 w-5"
@@ -75,7 +155,7 @@
 					d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
 				/></svg
 			>
-		</button>
+		</label>
 		<!-- Search Button End -->
 
 		<!-- Shopping Cart -->
@@ -99,13 +179,17 @@
 				</div>
 			</span>
 			<div tabindex="0" class="mt-3 card card-compact dropdown-content w-52 bg-base-100 shadow">
-				<div class="card-body">
-					<span class="font-bold text-lg">8 Items</span>
-					<span class="text-info">Subtotal: $999</span>
-					<div class="card-actions">
-						<a class="btn btn-primary btn-block" href="/basket">View basket</a>
+				{#await basketData}
+					<p>Loading...</p>
+				{:then data}
+					<div class="card-body">
+						<span class="font-bold text-lg">{data.basket.totalQty} Items</span>
+						<span class="text-info">Subtotal: {data.basket.totalPrice}€</span>
+						<div class="card-actions">
+							<a class="btn btn-primary btn-block" href="/basket">View basket</a>
+						</div>
 					</div>
-				</div>
+				{/await}
 			</div>
 		</div>
 		<!-- Shopping Cart End -->
@@ -115,7 +199,7 @@
 			<div class="dropdown dropdown-end">
 				<span tabindex="0" class="btn btn-ghost btn-circle avatar">
 					<div class="w-10 rounded-full">
-						<!-- <img src={$userStore?.profileImage} /> -->
+						<img src={$meQuery?.data?.me.profileImage} />
 					</div>
 				</span>
 				<ul
@@ -129,7 +213,7 @@
 						<a class="justify-between"> Account </a>
 					</li>
 					<li><a>Settings</a></li>
-					<li><a href="/new-product">Create a New Produkt</a></li>
+					<li><a href="/product/new">Create a New Produkt</a></li>
 					<li><form method="POST" action="/user?/logout"><button>Logout</button></form></li>
 				</ul>
 			</div>
