@@ -22,7 +22,6 @@ export const load = (async ({ fetch }) => {
 	const response = await fetch('/api/basket', { method: 'POST', body: JSON.stringify(cartWebId) });
 
 	const cart = await response.json();
-	console.log('cart', cart);
 
 	return cart;
 }) satisfies PageLoad;
