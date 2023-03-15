@@ -21,7 +21,7 @@
 	export let data: any;
 </script>
 
-{JSON.stringify(data.createCaptcha)}
+<!-- {JSON.stringify(data.createCaptcha)} -->
 <div class="flex justify-center my-16">
 	<div class="card w-4/5 bg-base-100 shadow-xl">
 		<div class="card-body">

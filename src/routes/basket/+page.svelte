@@ -106,7 +106,7 @@
 								<th>
 									<a
 										class="btn btn-ghost btn-xs"
-										href={`/products/${inventory.productInventory.product.webId}#${inventory.sku}`}
+										href={`/products/${inventory.productInventory.product.webId}/${inventory.productInventory.sku}`}
 										><svg
 											xmlns="http://www.w3.org/2000/svg"
 											fill="none"
