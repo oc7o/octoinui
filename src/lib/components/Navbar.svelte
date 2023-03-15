@@ -213,7 +213,6 @@
 						<a class="justify-between"> Account </a>
 					</li>
 					<li><a>Settings</a></li>
-					<li><a href="/product/new">Create a New Produkt</a></li>
 					<li><form method="POST" action="/user?/logout"><button>Logout</button></form></li>
 				</ul>
 			</div>
