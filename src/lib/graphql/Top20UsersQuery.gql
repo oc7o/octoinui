@@ -1,0 +1,8 @@
+query Top20UsersQuery {
+	top20Users {
+		username
+		isSuperuser
+		isStaff
+		profileImage
+	}
+}

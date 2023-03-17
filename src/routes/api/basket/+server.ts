@@ -1,4 +1,4 @@
-import { getBasketStore } from '$houdini';
+import { GetBasketQueryStore } from '$houdini';
 
 import { json } from '@sveltejs/kit';
 import type { RequestHandler } from './$types';
@@ -6,12 +6,10 @@ import type { RequestHandler } from './$types';
 export const POST = (async (event) => {
 	const variables = await event.request.json();
 
-	const basketQuery = new getBasketStore();
+	const basketQuery = new GetBasketQueryStore();
 
 	const { data } = await basketQuery.fetch({ event, variables: { webId: variables } });
 	const data_json = json(data);
-
-	console.log('data_json', data_json);
 
 	return data_json;
 }) satisfies RequestHandler;

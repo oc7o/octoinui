@@ -15,8 +15,6 @@ export const POST = (async (event) => {
 	);
 	const data_json = json(data);
 
-	console.log('data_json', data_json);
-
 	return data_json;
 }) satisfies RequestHandler;
 

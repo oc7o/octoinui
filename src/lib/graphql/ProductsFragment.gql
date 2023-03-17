@@ -1,0 +1,20 @@
+fragment ProductsFragment on RootQuery
+@arguments(
+	user: { type: "String", default: null }
+	offset: { type: "Int", default: null }
+	limit: { type: "Int", default: null }
+	search: { type: "String", default: null }
+) {
+	products(user: $user, offset: $offset, limit: $limit, search: $search) @paginate {
+		items {
+			webId
+			name
+			description
+			startingFromPrice
+			defaultImage {
+				imgUrl
+			}
+		}
+		totalItemsCount
+	}
+}

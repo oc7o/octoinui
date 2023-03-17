@@ -1,4 +1,4 @@
-query getBasket($webId: String!) {
+query GetBasketQuery($webId: String!) {
 	basket(webId: $webId) {
 		basketObjects {
 			quantity

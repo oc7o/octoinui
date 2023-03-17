@@ -1,0 +1,24 @@
+mutation CreateBasketMutation {
+	createBasket {
+		webId
+		basketObjects {
+			quantity
+			productInventory {
+				sku
+				storePrice
+				productImages {
+					imgUrl
+				}
+				product {
+					name
+					webId
+					defaultImage {
+						imgUrl
+					}
+				}
+			}
+		}
+		totalPrice
+		totalQty
+	}
+}

@@ -1,8 +1,14 @@
-<script>
+<script lang="ts">
 	import '../app.css';
+	import { user } from '$lib/auth';
+	import { basket } from '$lib/basket';
 
 	import Navbar from '../lib/components/Navbar.svelte';
 	import Drawer from '$lib/components/Drawer.svelte';
+	export let data;
+
+	$: user.set(data.user);
+	$: basket.set(data.basket);
 </script>
 
 <div style="background-image: url('/plant1.jpg');">

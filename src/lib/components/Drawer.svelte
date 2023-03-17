@@ -1,21 +1,6 @@
 <script>
 	import { graphql } from '$houdini';
-	$: meQuery = graphql(`
-		query DrawerQuery {
-			me {
-				username
-				isStaff
-				isActive
-				isSuperuser
-				email
-				lastName
-				firstName
-				dateJoined
-				lastLogin
-				profileImage
-			}
-		}
-	`);
+	import { user } from '$lib/auth';
 </script>
 
 <div class="drawer">
@@ -28,7 +13,7 @@
 		<ul class="menu p-4 w-80 bg-base-100 text-base-content">
 			<!-- Sidebar content here -->
 			<li><a>Sidebar Item 1</a></li>
-			{#if $meQuery?.data?.me !== null}
+			{#if $user !== null}
 				<li><a href="/product/new">Create a New Product</a></li>
 				<li><a href="/product/new">Your Products</a></li>
 			{/if}

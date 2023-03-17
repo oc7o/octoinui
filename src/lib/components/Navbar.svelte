@@ -2,56 +2,11 @@
 	import { graphql } from '$houdini';
 	import { browser } from '$app/environment';
 	import { searchStore } from '$lib/stores';
+	import { user } from '$lib/auth';
+	import { basket } from '$lib/basket';
 
 	let searchModalInput = '';
-
-	$: meQuery = graphql(`
-		query NavbarQuery {
-			me {
-				username
-				isStaff
-				isActive
-				isSuperuser
-				email
-				lastName
-				firstName
-				dateJoined
-				lastLogin
-				profileImage
-			}
-		}
-	`);
-
-	$: basketData = getBasket();
-
-	async function getBasket() {
-		if (!browser) {
-			return {};
-		}
-
-		let cartWebId;
-
-		if (localStorage.getItem('cart')) {
-			cartWebId = localStorage.getItem('cart') as string;
-		} else {
-			const r = await fetch('/api/basket/create');
-			const c = await r.json();
-			cartWebId = c.createBasket.webId;
-			localStorage.setItem('cart', JSON.stringify(cartWebId).replace(/['"]+/g, ''));
-		}
-
-		const response = await fetch('/api/basket', {
-			method: 'POST',
-			body: JSON.stringify(cartWebId)
-		});
-
-		const cart = await response.json();
-
-		return cart;
-	}
 </script>
-
-<!-- {JSON.stringify($meQuery?.data?.me)} -->
 
 <!-- Search Modal -->
 <input type="checkbox" id="search-modal" class="modal-toggle" />
@@ -179,27 +134,23 @@
 				</div>
 			</span>
 			<div tabindex="0" class="mt-3 card card-compact dropdown-content w-52 bg-base-100 shadow">
-				{#await basketData}
-					<p>Loading...</p>
-				{:then data}
-					<div class="card-body">
-						<span class="font-bold text-lg">{data.basket.totalQty} Items</span>
-						<span class="text-info">Subtotal: {data.basket.totalPrice}€</span>
-						<div class="card-actions">
-							<a class="btn btn-primary btn-block" href="/basket">View basket</a>
-						</div>
+				<div class="card-body">
+					<span class="font-bold text-lg">{$basket.totalQty} Items</span>
+					<span class="text-info">Subtotal: {$basket.totalPrice}€</span>
+					<div class="card-actions">
+						<a class="btn btn-primary btn-block" href="/basket">View basket</a>
 					</div>
-				{/await}
+				</div>
 			</div>
 		</div>
 		<!-- Shopping Cart End -->
 
-		{#if $meQuery?.data?.me !== null}
+		{#if $user !== null}
 			<!-- User Account -->
 			<div class="dropdown dropdown-end">
 				<span tabindex="0" class="btn btn-ghost btn-circle avatar">
 					<div class="w-10 rounded-full">
-						<img src={$meQuery?.data?.me.profileImage} />
+						<img src={$user.profileImage} />
 					</div>
 				</span>
 				<ul
@@ -207,7 +158,7 @@
 					class="menu menu-compact dropdown-content mt-3 p-2 shadow bg-base-100 rounded-box w-52"
 				>
 					<li>
-						<a class="justify-between" href={`/users/${$meQuery?.data?.me.username}`}> Profile </a>
+						<a class="justify-between" href={`/users/${$user.username}`}> Profile </a>
 					</li>
 					<li>
 						<a class="justify-between"> Account </a>

@@ -4,10 +4,7 @@
 
 	/* @type { import('./$houdini').PageData } */
 	export let data;
-	$: ({ MeQuery } = data);
 </script>
-
-<!-- {JSON.stringify($MeQuery)} -->
 
 <div class="flex justify-center my-16">
 	<p

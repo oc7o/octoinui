@@ -40,6 +40,7 @@ export const actions = {
 	logout: async (event: RequestEvent) => {
 		event.cookies.delete('token');
 		event.cookies.delete('refreshToken');
+		event.locals.user = null;
 
 		throw redirect(303, '/');
 

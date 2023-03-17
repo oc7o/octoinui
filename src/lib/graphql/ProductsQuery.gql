@@ -1,0 +1,14 @@
+query ProductsQuery($user: String = null, $offset: Int, $limit: Int, $search: String = null) {
+	products(user: $user, offset: $offset, limit: $limit, search: $search) @paginate {
+		items {
+			webId
+			name
+			description
+			startingFromPrice
+			defaultImage {
+				imgUrl
+			}
+		}
+		totalItemsCount
+	}
+}

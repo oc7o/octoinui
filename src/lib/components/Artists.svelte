@@ -1,16 +1,13 @@
 <script>
 	import { graphql } from '$houdini';
+	import { Top20UsersQueryStore } from '$houdini';
+	import { onMount } from 'svelte';
 
-	const store = graphql(`
-		query top20UsersQuery {
-			top20Users {
-				username
-				isSuperuser
-				isStaff
-				profileImage
-			}
-		}
-	`);
+	const userList = new Top20UsersQueryStore();
+
+	onMount(async () => {
+		await userList.fetch();
+	});
 </script>
 
 <!-- {JSON.stringify($store.data?.top20Users)} -->
@@ -27,9 +24,9 @@
 	</div>
 {/if} -->
 
-{#if $store.data?.top20Users && $store.data?.top20Users.length != 0}
+{#if $userList.data?.top20Users && $userList.data?.top20Users.length != 0}
 	<div class="carousel carousel-center rounded-box">
-		{#each $store.data?.top20Users as user}
+		{#each $userList.data?.top20Users as user}
 			<div class="carousel-item mx-4 card bg-base-100 shadow-xl w-96 h-[32rem]">
 				<figure>
 					<img src={user.profileImage} class="w-full h-96 object-cover object-top" />
