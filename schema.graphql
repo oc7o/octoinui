@@ -49,16 +49,21 @@ type DeleteType {
 scalar JSON
 
 type MeType {
-  dateJoined: DateTime!
+  balance: Decimal!
+  dateJoined: DateTime
   email: String!
   firstName: String!
   isActive: Boolean!
   isStaff: Boolean!
   isSuperuser: Boolean!
-  lastLogin: DateTime!
+  lastLogin: DateTime
   lastName: String!
   profileImage: String!
   username: String!
+}
+
+input MediaInputType {
+  imgUrl: Upload!
 }
 
 type MediaType {
@@ -80,6 +85,7 @@ type OrderType {
   firstname: String!
   invoice: OrderInvoiceType
   lastname: String!
+  status: String!
   street: String!
   zipCode: String!
 }
@@ -105,11 +111,11 @@ type ProductInventoryType {
   isDefault: Boolean!
   product: ProductType!
   productImages: [MediaType!]!
-  retailPrice: Decimal!
-  salePrice: Decimal!
+  retailPrice: Decimal
+  salePrice: Decimal
   sku: String!
   storePrice: Decimal!
-  upc: String!
+  upc: String
 }
 
 type ProductType {
@@ -135,6 +141,10 @@ type ProductTypePaginationWindow {
   totalItemsCount: Int!
 }
 
+type ProductTypeType {
+  name: String!
+}
+
 type RefreshedTokenType {
   payload: TokenPayloadType!
   refreshExpiresIn: Int!
@@ -147,6 +157,8 @@ type RootMutation {
   createBasket: BasketType!
   createCaptcha: CaptchaType!
   createOrder(basketWebId: String!, captchaText: String!, captchaWebId: String!, city: String!, email: String!, firstname: String!, lastname: String!, street: String!, zipCode: String!): OrderType!
+  createProduct(category: String!, description: String!, name: String!): ProductType!
+  createProductInventory(attributeValues: JSON = null, brand: String = null, isActive: Boolean = false, isDefault: Boolean = false, media: [MediaInputType!] = null, product: String!, productType: String = null, storePrice: Decimal!, weight: Decimal = null): ProductInventoryType!
   deleteBasket(webId: String!): BasketType!
   deleteTokenCookie: DeleteType!
   emptyBasket(webId: String!): BasketType!
@@ -160,11 +172,15 @@ type RootMutation {
 
 type RootQuery {
   basket(webId: String!): BasketType!
+  categories: [CategoryType!]!
+  checkOrder(code: String!): OrderType!
   invoices: [JSON!]!
   me: MeType
+  meProducts(limit: Int! = 20, offset: Int! = 0): ProductTypePaginationWindow
   productByWebId(webId: String!): ProductType
   productInventoriesBySkus(skus: [String!]!): [ProductInventoryType!]!
   productInventoryBySku(sku: String!): ProductInventoryType
+  productTypes: [ProductTypeType!]!
   products(category: String = null, limit: Int! = 20, offset: Int! = 0, search: String = null, user: String = null): ProductTypePaginationWindow!
   systemStatus: SystemStatus!
   top20Users: [UserType!]!
@@ -191,6 +207,8 @@ type TokenPayloadType {
   origIat: Int!
   username: String!
 }
+
+scalar Upload
 
 type UserType {
   dateJoined: DateTime!
