@@ -1,10 +1,15 @@
+// import { env } from '$env/dynamic/private';
+
 /// <references types="houdini-svelte">
 
 /** @type {import('houdini').ConfigFile} */
 const config = {
 	schemaPath: './schema.graphql',
 	sourceGlob: 'src/**/*.{svelte,gql,graphql}',
-	apiUrl: 'http://localhost:8000/graphql',
+	apiUrl: `env:GRAPHQL_ENDPOINT`,
+	watchSchema: {
+		url: `env:GRAPHQL_ENDPOINT` // 'http://localhost:8000/graphql'
+	},
 	plugins: {
 		'houdini-svelte': {}
 	},
@@ -21,17 +26,17 @@ const config = {
 				return decimal.toString();
 			}
 		},
-		JSON: {
-			type: 'JSON',
-			// turn the api's response into that type
-			unmarshal(val) {
-				return new JSON(val);
-			},
-			// turn the value into something the API can use
-			marshal(json) {
-				return json.toJSON();
-			}
-		},
+		// JSON: {
+		// 	type: 'JSON',
+		// 	// turn the api's response into that type
+		// 	unmarshal(val) {
+		// 		return JSON.parse(val);
+		// 	},
+		// 	// turn the value into something the API can use
+		// 	marshal(json) {
+		// 		return json.toJSON();
+		// 	}
+		// },
 		DateTime: {
 			// the corresponding typescript type
 			type: 'Date',
