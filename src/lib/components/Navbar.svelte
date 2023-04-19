@@ -1,11 +1,10 @@
 <script lang="ts">
-	import { graphql } from '$houdini';
-	import { browser } from '$app/environment';
-	import { searchStore } from '$lib/stores';
 	import { user } from '$lib/auth';
 	import { basket } from '$lib/basket';
+	import { page } from '$app/stores';
+	import { goto } from '$app/navigation';
 
-	let searchModalInput = '';
+	let search = $page.url.searchParams.get('search');
 </script>
 
 <!-- Search Modal -->
@@ -16,8 +15,7 @@
 			class="btn btn-sm btn-error btn-circle absolute right-2 top-2"
 			for="search-modal"
 			on:mousedown={() => {
-				searchStore.set(null);
-				searchModalInput = '';
+				goto(`/`);
 			}}>✕</label
 		>
 		<div class="btn-group w-full">
@@ -25,17 +23,17 @@
 				type="text"
 				placeholder="Search..."
 				class="input input-bordered w-full"
-				bind:value={searchModalInput}
+				bind:value={search}
 			/>
 
 			<label
 				for="search-modal"
 				class="btn btn-primary"
 				on:mousedown={() => {
-					if (searchModalInput !== '') {
-						searchStore.set(searchModalInput);
+					if (search !== '') {
+						goto(`/?search=${search ? search : ''}`);
 					} else {
-						searchStore.set(null);
+						goto(`/`);
 					}
 				}}
 				><svg
@@ -115,24 +113,32 @@
 
 		<!-- Shopping Cart -->
 		<div class="dropdown dropdown-end">
-			<span tabindex="0" class="btn btn-ghost btn-circle">
-				<div class="indicator">
-					<svg
-						xmlns="http://www.w3.org/2000/svg"
-						class="h-5 w-5"
-						fill="none"
-						viewBox="0 0 24 24"
-						stroke="currentColor"
-						><path
-							stroke-linecap="round"
-							stroke-linejoin="round"
-							stroke-width="2"
-							d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-						/></svg
+			<div class="indicator">
+				{#if $basket.totalQty > 0}
+					<span
+						class="mx-3 my-2 indicator-item indicator-bottom indicator-start badge badge-secondary"
+						>{$basket.totalQty}</span
 					>
-					<!-- <span class="badge badge-sm indicator-item">8</span> -->
-				</div>
-			</span>
+				{/if}
+				<span tabindex="0" class="btn btn-ghost btn-circle">
+					<div class="indicator">
+						<svg
+							xmlns="http://www.w3.org/2000/svg"
+							class="h-5 w-5"
+							fill="none"
+							viewBox="0 0 24 24"
+							stroke="currentColor"
+							><path
+								stroke-linecap="round"
+								stroke-linejoin="round"
+								stroke-width="2"
+								d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+							/></svg
+						>
+						<!-- <span class="badge badge-sm indicator-item">8</span> -->
+					</div>
+				</span>
+			</div>
 			<div tabindex="0" class="mt-3 card card-compact dropdown-content w-52 bg-base-100 shadow">
 				<div class="card-body">
 					<span class="font-bold text-lg">{$basket.totalQty} Items</span>
@@ -161,7 +167,7 @@
 						<a class="justify-between" href={`/users/${$user.username}`}> Profile </a>
 					</li>
 					<li>
-						<a class="justify-between"> Account </a>
+						<a href="/account" class="justify-between"> Account </a>
 					</li>
 					<li><a>Settings</a></li>
 					<li><form method="POST" action="/user?/logout"><button>Logout</button></form></li>
