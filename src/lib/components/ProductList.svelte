@@ -1,6 +1,4 @@
-<script lang="ts">
-	import { graphql } from '$houdini';
-
+<!-- <script lang="ts">
 	$: limit = 12;
 	$: offset = 0;
 	let search: string | null = null;
@@ -23,4 +21,4 @@
 	// 		}
 	// 	}
 	// `);
-</script>
+</script> -->
