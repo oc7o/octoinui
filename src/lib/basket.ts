@@ -3,7 +3,7 @@ import { GetBasketQueryStore, CreateBasketMutationStore } from '$houdini';
 import { writable } from 'svelte/store';
 
 export const fetchBasket = async (event: RequestEvent) => {
-	let basket = event.locals.basket;
+	let basket = event.cookies.get('basket') || null;
 
 	if (!basket) {
 		const createBasket = new CreateBasketMutationStore();
@@ -13,11 +13,13 @@ export const fetchBasket = async (event: RequestEvent) => {
 		basket = {
 			...response?.data?.createBasket
 		};
-
+		event.cookies.set('basket', basket.webId, {
+			path: '/'
+		});
 		return basket;
 	} else {
 		const getBasket = new GetBasketQueryStore();
-		const { data } = await getBasket.fetch({ event, variables: { webId: basket.webId } });
+		const { data } = await getBasket.fetch({ event, variables: { webId: basket } });
 
 		basket = {
 			...data?.basket
