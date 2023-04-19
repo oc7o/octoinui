@@ -1,5 +1,0 @@
-query TestQuery {
-  systemStatus {
-    system
-  }
-}
