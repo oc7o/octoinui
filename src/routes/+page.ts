@@ -19,6 +19,7 @@ export const _houdini_load = graphql`
 			isSuperuser
 			isStaff
 			profileImage
+			amountEarnedThisMonth
 		}
 	}
 `;
