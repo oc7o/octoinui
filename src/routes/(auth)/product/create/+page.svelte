@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { CategoryListStore } from '$houdini';
+
 	export let data: any;
 
 	$: ({ CategoryList } = data);
@@ -24,19 +26,32 @@
 					<label class="label">
 						<span class="label-text">Description</span>
 					</label>
-					<textarea name="description" class="textarea textarea-bordered h-24" placeholder="Bio" />
+					<textarea
+						name="description"
+						class="textarea textarea-bordered h-24"
+						placeholder="What makes it special?"
+					/>
 				</div>
-				<div class="form-control w-full max-w-xs">
-					<label class="label">
-						<span class="label-text">Category</span>
-					</label>
-					<select name="category" class="select select-bordered">
-						<option disabled selected>Pick one</option>
-						{#each $CategoryList.data.categories as category}
-							<option value={category.slug}>{category.name}</option>
-						{/each}
-					</select>
-				</div>
+				{#if $CategoryList.fetching}
+					<div class="form-control">
+						<label class="label">
+							<span class="label-text">Category</span>
+						</label>
+						<div class="loading loading-lg" />
+					</div>
+				{:else}
+					<div class="form-control w-full max-w-xs">
+						<label class="label">
+							<span class="label-text">Category</span>
+						</label>
+						<select name="category" class="select select-bordered">
+							<option disabled selected>Pick one</option>
+							{#each $CategoryList.data.categories as category}
+								<option value={category.slug}>{category.name}</option>
+							{/each}
+						</select>
+					</div>
+				{/if}
 				<div class="card-actions justify-end">
 					<button class="btn btn-primary">Create</button>
 				</div>
