@@ -4,6 +4,11 @@ export const _houdini_load = graphql`
 	query CheckOrder($code: String!) {
 		checkOrder(code: $code) {
 			status
+			firstname
+			lastname
+			zipCode
+			city
+			street
 		}
 	}
 `;

@@ -50,7 +50,31 @@
 		<div class="card w-4/6 mt-16 bg-base-100 shadow-xl">
 			<div class="card-body">
 				<h2 class="card-title">Order Lookup</h2>
-				{JSON.stringify($CheckOrder)}
+				<div class="stats stats-vertical lg:stats-horizontal shadow">
+					<div class="stat">
+						<div class="stat-title">Status</div>
+						<div class="stat-value">{$CheckOrder.data.checkOrder.status}</div>
+						<!-- <div class="stat-desc">Jan 1st - Feb 1st</div> -->
+					</div>
+
+					<div class="stat">
+						<div class="stat-title">Address</div>
+						<div class="stat-value">
+							{$CheckOrder.data.checkOrder.street}, {$CheckOrder.data.checkOrder.zipCode}
+							{$CheckOrder.data.checkOrder.city}
+						</div>
+						<!-- <div class="stat-desc">↗︎ 400 (22%)</div> -->
+					</div>
+
+					<div class="stat">
+						<div class="stat-title">Recepient</div>
+						<div class="stat-value">
+							{$CheckOrder.data.checkOrder.firstname}
+							{$CheckOrder.data.checkOrder.lastname}
+						</div>
+						<!-- <div class="stat-desc">↘︎ 90 (14%)</div> -->
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
