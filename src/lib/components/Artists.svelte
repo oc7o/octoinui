@@ -16,7 +16,7 @@
 				<div class="stats stats-vertical lg:stats-horizontal">
 					<div class="stat">
 						<div class="stat-title">Sold this month</div>
-						<div class="stat-value">31K</div>
+						<div class="stat-value">{user.amountEarnedThisMonth}</div>
 						<div class="stat-desc">All time:</div>
 					</div>
 
