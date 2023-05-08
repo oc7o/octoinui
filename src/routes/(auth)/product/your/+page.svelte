@@ -86,9 +86,9 @@
 										<a class="btn btn-ghost btn-xs" href={`/product/your/${product.webId}`}>
 											<ListIcon /></a
 										>
-										<a class="btn btn-ghost btn-xs" href={`/product/your/${product.webId}/edit`}>
+										<!-- <a class="btn btn-ghost btn-xs" href={`/product/your/${product.webId}/edit`}>
 											<EditIcon /></a
-										>
+										> -->
 
 										<!-- <a
 										class="btn btn-ghost btn-xs"
