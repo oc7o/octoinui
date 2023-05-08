@@ -216,6 +216,7 @@ type TokenPayloadType {
 scalar Upload
 
 type UserType {
+  amountEarnedThisMonth: Float!
   dateJoined: DateTime!
   isActive: Boolean!
   isStaff: Boolean!
