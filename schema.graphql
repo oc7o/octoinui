@@ -17,6 +17,7 @@ type BasketType {
   totalPrice: Decimal!
   totalQty: Int!
   updated: DateTime!
+  vendorBasketObjects: [BasketObjectType!]!
   webId: String!
 }
 
@@ -81,12 +82,14 @@ type OrderInvoiceType {
 type OrderType {
   basket: BasketType!
   city: String!
+  createdAt: DateTime
   email: String!
   firstname: String!
   invoice: OrderInvoiceType
   lastname: String!
   status: String!
   street: String!
+  totalPrice: Decimal!
   zipCode: String!
 }
 
@@ -160,6 +163,7 @@ type RootMutation {
   createProduct(category: String!, description: String!, name: String!): ProductType!
   createProductInventory(attributeValues: JSON = null, brand: String = null, isActive: Boolean = false, isDefault: Boolean = false, media: [MediaInputType!] = null, product: String!, productType: String = null, storePrice: Decimal!, weight: Decimal = null): ProductInventoryType!
   deleteBasket(webId: String!): BasketType!
+  deleteProductInventory(sku: String!): Boolean!
   deleteTokenCookie: DeleteType!
   emptyBasket(webId: String!): BasketType!
   refreshToken(refreshToken: String, token: String): RefreshedTokenType!
@@ -177,6 +181,7 @@ type RootQuery {
   invoices: [JSON!]!
   me: MeType
   meProducts(limit: Int! = 20, offset: Int! = 0): ProductTypePaginationWindow
+  myOrders: [OrderType!]!
   productByWebId(webId: String!): ProductType
   productInventoriesBySkus(skus: [String!]!): [ProductInventoryType!]!
   productInventoryBySku(sku: String!): ProductInventoryType
