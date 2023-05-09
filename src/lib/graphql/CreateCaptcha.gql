@@ -1,6 +1,0 @@
-mutation createCaptcha {
-	createCaptcha {
-		image
-		webId
-	}
-}

@@ -15,3 +15,5 @@ import { writable } from 'svelte/store';
 // }
 
 // export const userStore = writable<UserStore | null>(null);
+
+export const searchStore = writable(null as string | null);

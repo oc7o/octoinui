@@ -1,7 +1,0 @@
-mutation RemoveFromBasket($productInventorySku: String!, $webId: String!) {
-	removeFromBasket(productInventorySku: $productInventorySku, webId: $webId) {
-		basketObjects {
-			webId
-		}
-	}
-}

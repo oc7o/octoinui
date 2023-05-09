@@ -8,14 +8,14 @@ query productByWebId($webId: String!) {
 		createdAt
 		updatedAt
 		defaultImage {
-			imgUrl
+			image
 		}
 		category {
 			name
 			slug
 		}
-		product {
-			sku
+		inventories {
+			webId
 			attributes
 		}
 	}
