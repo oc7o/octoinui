@@ -14,21 +14,21 @@ export const _houdini_load = graphql`
 				username
 			}
 			defaultImage {
-				imgUrl
+				image
 			}
 			category {
 				name
 				slug
 			}
-			product {
-				sku
+			inventories {
+				webId
 				attributes
 				storePrice
 				brand {
 					name
 				}
 				productImages {
-					imgUrl
+					image
 				}
 			}
 		}

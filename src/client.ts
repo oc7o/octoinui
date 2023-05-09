@@ -1,7 +1,7 @@
 import { HoudiniClient } from '$houdini';
 
 export default new HoudiniClient({
-	url: 'https://dev.sloow.de/graphql', // import.meta.env.GRAPHQL_ENDPOINT, // 'http://localhost:8000/graphql',
+	url: 'http://localhost:8000/graphql', // import.meta.env.GRAPHQL_ENDPOINT, // 'http://localhost:8000/graphql', https://dev.sloow.de/graphql
 	fetchParams({ session, text, variables }) {
 		return {
 			method: 'POST',

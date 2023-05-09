@@ -4,16 +4,16 @@ mutation CreateBasketMutation {
 		basketObjects {
 			quantity
 			productInventory {
-				sku
+				webId
 				storePrice
 				productImages {
-					imgUrl
+					image
 				}
 				product {
 					name
 					webId
 					defaultImage {
-						imgUrl
+						image
 					}
 				}
 			}

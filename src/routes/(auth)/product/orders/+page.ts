@@ -15,7 +15,7 @@ export const _houdini_load = graphql`
 			basket {
 				vendorBasketObjects {
 					productInventory {
-						sku
+						webId
 						product {
 							name
 							owner {

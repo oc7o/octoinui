@@ -4,26 +4,26 @@ schema {
 }
 
 type BasketObjectType {
-  created: DateTime!
+  createdAt: DateTime!
   productInventory: ProductInventoryType
   quantity: Int!
-  updated: DateTime!
+  updatedAt: DateTime!
   webId: String!
 }
 
 type BasketType {
   basketObjects: [BasketObjectType!]!
-  created: DateTime!
+  createdAt: DateTime!
   totalPrice: Decimal!
   totalQty: Int!
-  updated: DateTime!
+  updatedAt: DateTime!
   vendorBasketObjects: [BasketObjectType!]!
   webId: String!
 }
 
 type BrandType {
   name: String!
-  slug: String!
+  webId: String!
 }
 
 type CaptchaType {
@@ -34,6 +34,7 @@ type CaptchaType {
 type CategoryType {
   name: String!
   slug: String!
+  webId: String!
 }
 
 """Date with time (isoformat)"""
@@ -64,11 +65,12 @@ type MeType {
 }
 
 input MediaInputType {
-  imgUrl: Upload!
+  image: Upload!
 }
 
 type MediaType {
-  imgUrl: String!
+  image: String!
+  webId: String!
 }
 
 type OrderInvoiceType {
@@ -99,11 +101,13 @@ type PayloadType {
 
 type ProductAttributeType {
   name: String!
+  webId: String!
 }
 
 type ProductAttributeValueType {
   attributeValue: String!
   productAttribute: ProductAttributeType!
+  webId: String!
 }
 
 type ProductInventoryType {
@@ -116,9 +120,10 @@ type ProductInventoryType {
   productImages: [MediaType!]!
   retailPrice: Decimal
   salePrice: Decimal
-  sku: String!
+  sku: String
   storePrice: Decimal!
   upc: String
+  webId: String!
 }
 
 type ProductType {
@@ -126,10 +131,10 @@ type ProductType {
   createdAt: String!
   defaultImage: MediaType
   description: String!
+  inventories: [ProductInventoryType!]!
   isActive: Boolean!
   name: String!
   owner: UserType!
-  product: [ProductInventoryType!]!
   slug: String!
   startingFromPrice: Decimal!
   updatedAt: String!
@@ -146,6 +151,7 @@ type ProductTypePaginationWindow {
 
 type ProductTypeType {
   name: String!
+  webId: String!
 }
 
 type RefreshedTokenType {
@@ -156,48 +162,40 @@ type RefreshedTokenType {
 }
 
 type RootMutation {
-  addToBasket(productInventorySku: String!, quantity: Int!, webId: String!): BasketType!
+  addToBasket(basketWebId: String!, inventoryWebId: String!, quantity: Int!): BasketType!
   createBasket: BasketType!
   createCaptcha: CaptchaType!
   createOrder(basketWebId: String!, captchaText: String!, captchaWebId: String!, city: String!, email: String!, firstname: String!, lastname: String!, street: String!, zipCode: String!): OrderType!
   createProduct(category: String!, description: String!, name: String!): ProductType!
-  createProductInventory(attributeValues: JSON = null, brand: String = null, isActive: Boolean = false, isDefault: Boolean = false, media: [MediaInputType!] = null, product: String!, productType: String = null, storePrice: Decimal!, weight: Decimal = null): ProductInventoryType!
+  createProductInventory(attributeValues: JSON = null, brandWebId: String = null, isActive: Boolean = false, isDefault: Boolean = false, media: [MediaInputType!] = null, productTypeWebId: String = null, productWebId: String!, storePrice: Decimal!, weight: Decimal = null): ProductInventoryType!
   deleteBasket(webId: String!): BasketType!
-  deleteProductInventory(sku: String!): Boolean!
+  deleteProduct(webId: String!): Boolean!
+  deleteProductInventory(webId: String!): Boolean!
   deleteTokenCookie: DeleteType!
-  emptyBasket(webId: String!): BasketType!
+  emptyBasket(basketWebId: String!): BasketType!
   refreshToken(refreshToken: String, token: String): RefreshedTokenType!
-  removeFromBasket(productInventorySku: String!, webId: String!): BasketType!
+  removeFromBasket(basketWebId: String!, inventoryWebId: String!): BasketType!
   submitCaptcha(captchaText: String!, webId: String!): Boolean!
   tokenAuth(password: String!, refreshToken: String, token: String, username: String!): TokenDataType!
-  updateBasket(productInventoryId: String!, quantity: Int!, webId: String!): BasketType!
+  updateBasket(basketWebId: String!, inventoryWebId: String!, quantity: Int!): BasketType!
   verifyToken(token: String!): PayloadType!
 }
 
 type RootQuery {
   basket(webId: String!): BasketType!
   categories: [CategoryType!]!
-  checkOrder(code: String!): OrderType!
+  checkOrder(webId: String!): OrderType!
+  inventoriesByWebIds(webIds: [String!]!): [ProductInventoryType!]!
+  inventoryByWebId(webId: String!): ProductInventoryType
   invoices: [JSON!]!
   me: MeType
   meProducts(limit: Int! = 20, offset: Int! = 0): ProductTypePaginationWindow
   myOrders: [OrderType!]!
   productByWebId(webId: String!): ProductType
-  productInventoriesBySkus(skus: [String!]!): [ProductInventoryType!]!
-  productInventoryBySku(sku: String!): ProductInventoryType
   productTypes: [ProductTypeType!]!
   products(category: String = null, limit: Int! = 20, offset: Int! = 0, search: String = null, user: String = null): ProductTypePaginationWindow!
-  systemStatus: SystemStatus!
   top20Users: [UserType!]!
   user(username: String!): UserType!
-}
-
-type SystemStatus {
-  machine: String!
-  processor: String!
-  release: String!
-  system: String!
-  version: String!
 }
 
 type TokenDataType {

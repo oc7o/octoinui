@@ -55,7 +55,7 @@
 									<h2 class="title">{product.name}</h2>
 									<h3 class="category">Starting From: {product.startingFromPrice}</h3>
 								</figcaption>
-								<img src={product.defaultImage?.imgUrl} alt="..." />
+								<img src={product.defaultImage?.image} alt="..." />
 								<span class="img-content-hover">
 									<h2 class="title">{product.name}</h2>
 									<h3 class="category">Starting From: {product.startingFromPrice}€</h3>

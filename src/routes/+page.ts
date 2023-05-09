@@ -9,7 +9,7 @@ export const _houdini_load = graphql`
 				description
 				startingFromPrice
 				defaultImage {
-					imgUrl
+					image
 				}
 			}
 			totalItemsCount

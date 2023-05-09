@@ -1,0 +1,10 @@
+query inventoryByWebId($webId: String!) {
+	inventoryByWebId(webId: $webId) {
+		sku
+		attributes
+		product {
+			name
+			webId
+		}
+	}
+}

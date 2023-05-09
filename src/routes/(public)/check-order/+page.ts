@@ -1,8 +1,8 @@
 import { graphql } from '$houdini';
 
 export const _houdini_load = graphql`
-	query CheckOrder($code: String!) {
-		checkOrder(code: $code) {
+	query CheckOrder($webId: String!) {
+		checkOrder(webId: $webId) {
 			status
 			firstname
 			lastname
@@ -14,7 +14,5 @@ export const _houdini_load = graphql`
 `;
 
 export const _CheckOrderVariables = ({ props, url }) => {
-	console.log(url.searchParams.get('code'));
-
-	return { code: url.searchParams.get('code') };
+	return { webId: url.searchParams.get('code') };
 };

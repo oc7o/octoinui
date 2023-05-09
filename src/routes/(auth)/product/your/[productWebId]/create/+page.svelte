@@ -19,20 +19,20 @@
 
 	const createProductInventory: CreateProductInventoryMutationStore = graphql`
 		mutation CreateProductInventoryMutation(
-			$product: String!
-			$productType: String
+			$productWebId: String!
+			$productTypeWebId: String
 			$storePrice: Decimal!
 			$media: [MediaInputType!]
 			$attributeValues: JSON
 		) {
 			createProductInventory(
-				product: $product
+				productWebId: $productWebId
 				storePrice: $storePrice
-				productType: $productType
+				productTypeWebId: $productTypeWebId
 				media: $media
 				attributeValues: $attributeValues
 			) {
-				sku
+				webId
 			}
 		}
 	`;
@@ -162,16 +162,16 @@
 					on:click={async () => {
 						let media = [];
 						for (let i = 0; i < files.length; i++) {
-							media.push({ imgUrl: files[i] });
+							media.push({ image: files[i] });
 						}
 						// let attributeValues = {};
 						// for (let i = 0; i < key_fields.length; i++) {
 						// 	attributeValues[key_fields[i]] = value_fields[i];
 						// }
 						const res = createProductInventory.mutate({
-							product: $CreateProductInventory.data.productByWebId.webId,
+							productWebId: $CreateProductInventory.data.productByWebId.webId,
 							storePrice: storePrice,
-							productType: productType,
+							productTypeWebId: productType,
 							media: media
 						});
 

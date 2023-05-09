@@ -3,16 +3,16 @@ query GetBasketQuery($webId: String!) {
 		basketObjects {
 			quantity
 			productInventory {
-				sku
+				webId
 				storePrice
 				productImages {
-					imgUrl
+					image
 				}
 				product {
 					name
 					webId
 					defaultImage {
-						imgUrl
+						image
 					}
 				}
 			}

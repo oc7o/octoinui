@@ -1,8 +1,8 @@
 import { graphql } from '$houdini';
 
 export const _houdini_load = graphql`
-	query YourProductInventories($webId: String!) {
-		productByWebId(webId: $webId) {
+	query YourProductInventories($productWebId: String!) {
+		productByWebId(webId: $productWebId) {
 			name
 			description
 			isActive
@@ -11,11 +11,11 @@ export const _houdini_load = graphql`
 				slug
 			}
 			webId
-			product {
-				sku
+			inventories {
+				webId
 				storePrice
 				productImages {
-					imgUrl
+					image
 				}
 			}
 		}

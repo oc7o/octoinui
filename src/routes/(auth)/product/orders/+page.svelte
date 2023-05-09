@@ -64,7 +64,7 @@
 										<div class="flex items-center space-x-3">
 											<div class="avatar">
 												<div class="mask mask-squircle w-12 h-12">
-													<!-- <img src={product?.productInventory?.productImages[0]?.imgUrl} /> -->
+													<!-- <img src={product?.productInventory?.productImages[0]?.image} /> -->
 													<!-- change src to correct img -->
 												</div>
 											</div>

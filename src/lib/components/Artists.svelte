@@ -4,8 +4,8 @@
 
 {#if $artists.fetching}
 	<p>Loading...</p>
-{:else if $artists.error}
-	<p>Error: {$artists.error.message}</p>
+{:else if $artists.errors}
+	<p>Error: {JSON.stringify($artists.errors)}</p>
 {:else if $artists.data}
 	<div class="carousel carousel-center rounded-box">
 		{#each $artists.data?.top20Users as user}

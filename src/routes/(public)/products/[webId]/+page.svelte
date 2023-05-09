@@ -5,7 +5,7 @@
 	export let data: any;
 	$: ({ ProductDetail } = data);
 
-	$: sku = $page.url.searchParams.get('sku') || null;
+	$: webId = $page.url.searchParams.get('webId') || null;
 </script>
 
-<SingleProductCard product={ProductDetail} {sku} />
+<SingleProductCard product={ProductDetail} inventoryWebId={webId} />

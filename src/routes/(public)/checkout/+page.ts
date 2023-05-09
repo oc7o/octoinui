@@ -1,4 +1,3 @@
-// import { productInventoriesBySkusStore } from '$houdini';
 import type { LoadEvent } from '@sveltejs/kit';
 import { get } from 'svelte/store';
 import { browser } from '$app/environment';

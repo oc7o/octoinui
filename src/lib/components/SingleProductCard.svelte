@@ -7,24 +7,24 @@
 	import { invalidateAll } from '$app/navigation';
 
 	export let product: any;
-	export let sku: string | null;
+	export let inventoryWebId: string | null;
 
 	$: inventory =
-		sku != null
-			? $product.data?.productByWebId?.product?.find((i: any) => i.sku == sku)
-			: $product.data?.productByWebId?.product?.[0];
+		inventoryWebId != null
+			? $product.data?.productByWebId?.inventories?.find((i: any) => i.webId == inventoryWebId)
+			: $product.data?.productByWebId?.inventories?.[0];
 
 	const addOneItemToBasket = graphql(`
-		mutation addOneItemToBasket($webId: String!, $productInventorySku: String!) {
-			addToBasket(webId: $webId, productInventorySku: $productInventorySku, quantity: 1) {
+		mutation addOneItemToBasket($basketWebId: String!, $inventoryWebId: String!) {
+			addToBasket(basketWebId: $basketWebId, inventoryWebId: $inventoryWebId, quantity: 1) {
 				webId
 			}
 		}
 	`);
 
-	const addItemToCart = async (sku: string) => {
+	const addItemToCart = async (inventoryWebId: string) => {
 		const webId = await get(basket).webId;
-		await addOneItemToBasket.mutate({ webId: webId, productInventorySku: sku });
+		await addOneItemToBasket.mutate({ basketWebId: webId, inventoryWebId: inventoryWebId });
 		invalidateAll();
 		addToast({
 			message: 'Added 1 to basket!',
@@ -37,10 +37,10 @@
 
 {#if $product.fetching}
 	<p>Loading...</p>
-{:else if $product.error}
-	<p>Error: {$product.error.message}</p>
+{:else if $product.errors}
+	<p>Error: {$product.errors}</p>
 {:else if $product.data}
-	<div id={`#${inventory.sku}`} class="card mx-96 my-8">
+	<div id={`#${inventory.webId}`} class="card mx-96 my-8">
 		<div class="card__title">
 			<div class="icon">
 				<a href="/"><i class="fa fa-arrow-left" />←</a>
@@ -61,7 +61,7 @@
 						<div class="image carousel-item">
 							<img
 								class="rounded-xl h-96 w-96 object-cover object-center"
-								src={image.imgUrl}
+								src={image.image}
 								alt=""
 							/>
 						</div>
@@ -106,7 +106,7 @@
 				<button
 					type="button"
 					on:click={() => {
-						addItemToCart(inventory.sku);
+						addItemToCart(inventory.webId);
 					}}>Add to cart</button
 				>
 			</div>
@@ -114,7 +114,7 @@
 		<div class="flex justify-center py-2 gap-2">
 			{#each $product.data?.productByWebId?.product as inventory, i}
 				<a
-					href={`/products/${$product.data?.productByWebId?.webId}?sku=${inventory.sku}`}
+					href={`/products/${$product.data?.productByWebId?.webId}?webId=${inventory.webId}`}
 					class="btn btn-xs">{i}</a
 				>
 			{/each}

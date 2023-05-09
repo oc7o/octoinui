@@ -3,10 +3,11 @@
 	import { invalidateAll } from '$app/navigation';
 	import BinIcon from '$lib/components/icons/Bin.svelte';
 	import ViewIcon from '$lib/components/icons/View.svelte';
+	import { basket } from '$lib/basket';
 
 	const removeFromBasket = graphql(`
-		mutation RemoveFromBasket($productInventorySku: String!, $webId: String!) {
-			removeFromBasket(productInventorySku: $productInventorySku, webId: $webId) {
+		mutation RemoveFromBasket($basketWebId: String!, $inventoryWebId: String!) {
+			removeFromBasket(basketWebId: $basketWebId, inventoryWebId: $inventoryWebId) {
 				basketObjects {
 					webId
 				}
@@ -22,23 +23,12 @@
 		}
 	`);
 
-	async function removeItemFromBasket(sku: string, webId: string) {
-		await removeFromBasket.mutate({ productInventorySku: sku, webId: webId });
+	async function removeItemFromBasket(basketWebId: string, inventoryWebId: string) {
+		await removeFromBasket.mutate({ basketWebId: basketWebId, inventoryWebId: inventoryWebId });
 		invalidateAll();
 	}
 
-	// async function removeOneItemFromBasket(sku: string, webId: string) {
-	// 	await removeFromBasket.mutate({ productInventorySku: sku, webId: webId });
-	// 	invalidateAll();
-	// }
-
-	// async function addOneItemToBasket(sku: string, webId: string) {
-	// 	await removeFromBasket.mutate({ productInventorySku: sku, webId: webId });
-	// 	invalidateAll();
-	// }
-
 	async function removeBasket(webId: string) {}
-	import { basket } from '$lib/basket';
 </script>
 
 <div class="flex justify-center my-16">
@@ -83,13 +73,13 @@
 									<div class="flex items-center space-x-3">
 										<div class="avatar">
 											<div class="mask mask-squircle w-12 h-12">
-												<img src={inventory.productInventory.productImages[0].imgUrl} />
+												<img src={inventory.productInventory.productImages[0].image} />
 												<!-- change src to correct img -->
 											</div>
 										</div>
 										<div>
 											<div class="font-bold">{inventory.productInventory.product.name}</div>
-											<div class="text-sm opacity-50">{inventory.productInventory.sku}</div>
+											<div class="text-sm opacity-50">{inventory.productInventory.webId}</div>
 										</div>
 									</div>
 								</td>
@@ -100,13 +90,13 @@
 								<th>
 									<a
 										class="btn btn-ghost btn-xs"
-										href={`/products/${inventory.productInventory.product.webId}?sku=${inventory.productInventory.sku}`}
+										href={`/products/${inventory.productInventory.product.webId}?webId=${inventory.productInventory.webId}`}
 										><ViewIcon />
 									</a>
 									<button
 										class="btn btn-error btn-xs"
 										on:click={() =>
-											removeItemFromBasket(inventory.productInventory.sku, $basket?.webId)}
+											removeItemFromBasket($basket?.webId, inventory.productInventory.webId)}
 										><BinIcon />
 									</button>
 								</th>

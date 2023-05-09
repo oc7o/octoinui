@@ -1,0 +1,12 @@
+query inventoriesByWebIds($webIds: [String!]!) {
+	inventoriesByWebIds(webIds: $webIds) {
+		webId
+		product {
+			name
+			webId
+			defaultImage {
+				image
+			}
+		}
+	}
+}
