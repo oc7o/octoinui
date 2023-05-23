@@ -1,8 +1,8 @@
 <script lang="ts">
-	import { graphql, CategoryListStore } from '$houdini';
+	import { graphql } from '$houdini';
 	import { addToast } from '$lib/notifications';
 	import { redirect } from '@sveltejs/kit';
-	import { goto, invalidateAll } from '$app/navigation';
+	import { goto, invalidate } from '$app/navigation';
 
 	export let data: any;
 
@@ -32,25 +32,25 @@
 			<div class="form-control w-full max-w-xs">
 				<label class="label">
 					<span class="label-text">Name</span>
-					<input
-						name="name"
-						type="text"
-						placeholder="Type here"
-						class="input input-bordered w-full max-w-xs"
-						bind:value={name}
-					/>
 				</label>
+				<input
+					name="name"
+					type="text"
+					placeholder="Type here"
+					class="input input-bordered w-full max-w-xs"
+					bind:value={name}
+				/>
 			</div>
 			<div class="form-control">
 				<label class="label">
 					<span class="label-text">Description</span>
-					<textarea
-						name="description"
-						class="textarea textarea-bordered h-24"
-						placeholder="What makes it special?"
-						bind:value={description}
-					/>
 				</label>
+				<textarea
+					name="description"
+					class="textarea textarea-bordered h-24"
+					placeholder="What makes it special?"
+					bind:value={description}
+				/>
 			</div>
 			{#if $CategoryList.fetching}
 				<div class="form-control">
@@ -63,13 +63,13 @@
 				<div class="form-control w-full max-w-xs">
 					<label class="label">
 						<span class="label-text">Category</span>
-						<select name="category" class="select select-bordered" bind:value={category}>
-							<option disabled selected>Pick one</option>
-							{#each $CategoryList.data.categories as category}
-								<option value={category.slug}>{category.name}</option>
-							{/each}
-						</select>
 					</label>
+					<select name="category" class="select select-bordered" bind:value={category}>
+						<option disabled selected>Pick one</option>
+						{#each $CategoryList.data.categories as category}
+							<option value={category.slug}>{category.name}</option>
+						{/each}
+					</select>
 				</div>
 			{/if}
 			<div class="card-actions justify-end">
@@ -94,9 +94,8 @@
 								dismissible: true,
 								timeout: 10000
 							});
-							await invalidateAll();
 
-							await goto('/product/your');
+							await goto('/product/your', { invalidateAll: true });
 						}
 					}}>Create</button
 				>

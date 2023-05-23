@@ -38,7 +38,7 @@
 {#if $product.fetching}
 	<p>Loading...</p>
 {:else if $product.errors}
-	<p>Error: {$product.errors}</p>
+	<p>Error: {JSON.stringify($product.errors)}</p>
 {:else if $product.data}
 	<div id={`#${inventory.webId}`} class="card mx-96 my-8">
 		<div class="card__title">
@@ -84,7 +84,7 @@
 						{/each}
 					</tbody>
 				</table>
-				<span class="stock"><i class="fa fa-pen" /> In stock</span>
+				<span class="stock"><i class="fa fa-pen" /> In stock ({inventory.stock.units} units)</span>
 				<div class="reviews">
 					<ul class="stars">
 						<li><i class="fa fa-star" /></li>
@@ -112,10 +112,10 @@
 			</div>
 		</div>
 		<div class="flex justify-center py-2 gap-2">
-			{#each $product.data?.productByWebId?.product as inventory, i}
+			{#each $product.data?.productByWebId?.inventories as inventory, i}
 				<a
 					href={`/products/${$product.data?.productByWebId?.webId}?webId=${inventory.webId}`}
-					class="btn btn-xs">{i}</a
+					class="btn btn-xs">{i + 1}</a
 				>
 			{/each}
 		</div>

@@ -20,9 +20,9 @@
 <div class="flex justify-center my-16">
 	<div class="card w-4/5 bg-base-100 shadow-xl">
 		<div class="card-body">
-			<h2 class="card-title">Card title!</h2>
+			<h2 class="card-title" />
 			<ul class="steps steps-horizontal">
-				<li class="step step-primary" data-content="🤷‍♂️">Kontakt</li>
+				<li class="step step-primary" data-content="🤷‍♂️">Contact</li>
 				<li class="step" data-content="💸">Buy</li>
 				<li class="step" data-content="✅">Finish</li>
 			</ul>

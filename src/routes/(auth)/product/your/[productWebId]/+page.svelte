@@ -14,33 +14,9 @@
 		}
 	`;
 
-	let inventoryToDelete: string;
-
 	export let data: any;
 	$: ({ YourProductInventories } = data);
 </script>
-
-<input type="checkbox" id="delete-modal" class="modal-toggle" />
-<label for="delete-modal" class="modal cursor-pointer">
-	<label class="modal-box relative" for="">
-		<h3 class="text-lg font-bold">Really delete ... ?</h3>
-		<p class="py-4" />
-		<div class="modal-action">
-			<label
-				for="my-modal"
-				class="btn btn-error"
-				on:mousedown={async () => {
-					const res = await deleteProductInventory.mutate({
-						webId: inventoryToDelete
-					});
-					const t = await invalidateAll();
-					console.log(res);
-					console.log(t);
-				}}>Delete</label
-			>
-		</div>
-	</label>
-</label>
 
 {#if $YourProductInventories.fetching}
 	<div class="flex justify-center my-16">
@@ -211,12 +187,14 @@
 											<ViewIcon /></a
 										>
 										<a class="btn btn-ghost btn-xs"><EditIcon /></a>
-										<label
-											for="delete-modal"
+										<button
 											class="btn btn-ghost btn-xs"
-											on:mousedown={() => {
-												inventoryToDelete = inventory.webId;
-											}}><BinIcon /></label
+											on:click={async () => {
+												const res = await deleteProductInventory.mutate({
+													webId: inventory.webId
+												});
+												await YourProductInventories.fetch({ policy: 'NetworkOnly' });
+											}}><BinIcon /></button
 										>
 									</th>
 								</tr>
