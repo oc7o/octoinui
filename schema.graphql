@@ -14,6 +14,7 @@ type BasketObjectType {
 type BasketType {
   basketObjects: [BasketObjectType!]!
   createdAt: DateTime!
+  order: OrderType
   totalPrice: Decimal!
   totalQty: Int!
   updatedAt: DateTime!
@@ -92,6 +93,7 @@ type OrderType {
   status: String!
   street: String!
   totalPrice: Decimal!
+  webId: String!
   zipCode: String!
 }
 
@@ -121,6 +123,7 @@ type ProductInventoryType {
   retailPrice: Decimal
   salePrice: Decimal
   sku: String
+  stock: StockType
   storePrice: Decimal!
   upc: String
   webId: String!
@@ -196,6 +199,11 @@ type RootQuery {
   products(category: String = null, limit: Int! = 20, offset: Int! = 0, search: String = null, user: String = null): ProductTypePaginationWindow!
   top20Users: [UserType!]!
   user(username: String!): UserType!
+}
+
+type StockType {
+  units: Int!
+  webId: String!
 }
 
 type TokenDataType {
