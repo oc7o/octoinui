@@ -5,7 +5,6 @@ export const _houdini_load = graphql`
 		productByWebId(webId: $webId) {
 			webId
 			name
-			slug
 			description
 			isActive
 			createdAt
@@ -29,6 +28,9 @@ export const _houdini_load = graphql`
 				}
 				productImages {
 					image
+				}
+				stock {
+					units
 				}
 			}
 		}

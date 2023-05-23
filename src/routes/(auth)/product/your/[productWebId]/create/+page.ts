@@ -1,13 +1,14 @@
 import { graphql } from '$houdini';
 
 export const _houdini_load = graphql`
-	query CreateProductInventory($webId: String!) {
-		productByWebId(webId: $webId) {
+	query CreateProductInventory($productWebId: String!) {
+		productByWebId(webId: $productWebId) {
 			name
 			webId
 		}
 		productTypes {
 			name
+			webId
 		}
 	}
 `;
