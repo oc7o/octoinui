@@ -101,7 +101,7 @@
 													console.log(errors);
 													return;
 												} else {
-													await invalidateAll();
+													await YourProducts.fetch({ policy: 'NetworkOnly' });
 												}
 											}}><BinIcon /></button
 										>
