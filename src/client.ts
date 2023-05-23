@@ -1,8 +1,8 @@
 import { HoudiniClient } from '$houdini';
-import { GRAPHQL_ENDPOINT } from '$env/dynamic/private';
+import { PUBLIC_GRAPHQL_ENDPOINT } from '$env/dynamic/public';
 
 export default new HoudiniClient({
-	url: GRAPHQL_ENDPOINT, // import.meta.env.GRAPHQL_ENDPOINT, // 'http://localhost:8000/graphql', https://dev.sloow.de/graphql
+	url: PUBLIC_GRAPHQL_ENDPOINT, // import.meta.env.GRAPHQL_ENDPOINT, // 'http://localhost:8000/graphql', https://dev.sloow.de/graphql
 	fetchParams({ session, text, variables }) {
 		return {
 			method: 'POST',

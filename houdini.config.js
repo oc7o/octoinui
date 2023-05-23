@@ -6,9 +6,9 @@
 const config = {
 	schemaPath: './schema.graphql',
 	sourceGlob: 'src/**/*.{svelte,gql,graphql}',
-	apiUrl: 'env:GRAPHQL_ENDPOINT', //`env:GRAPHQL_ENDPOINT`,		// https://dev.sloow.de/graphql
+	apiUrl: 'env:PUBLIC_GRAPHQL_ENDPOINT', //`env:GRAPHQL_ENDPOINT`,		// https://dev.sloow.de/graphql
 	watchSchema: {
-		url: 'env:GRAPHQL_ENDPOINT' // `env:GRAPHQL_ENDPOINT` // 'http://localhost:8000/graphql'
+		url: 'env:PUBLIC_GRAPHQL_ENDPOINT' // `env:GRAPHQL_ENDPOINT` // 'http://localhost:8000/graphql'
 	},
 	plugins: {
 		'houdini-svelte': {}
