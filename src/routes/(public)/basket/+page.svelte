@@ -24,11 +24,24 @@
 	`);
 
 	async function removeItemFromBasket(basketWebId: string, inventoryWebId: string) {
-		await removeFromBasket.mutate({ basketWebId: basketWebId, inventoryWebId: inventoryWebId });
+		const { data, errors } = await removeFromBasket.mutate({
+			basketWebId: basketWebId,
+			inventoryWebId: inventoryWebId
+		});
+
 		invalidateAll();
 	}
 
-	async function removeBasket(webId: string) {}
+	async function removeBasket(webId: string) {
+		const { data, errors } = await removeBasketMutation.mutate({
+			webId: webId
+		});
+		if (errors) {
+			console.error(errors);
+		}
+
+		invalidateAll();
+	}
 </script>
 
 <div class="flex justify-center my-16">

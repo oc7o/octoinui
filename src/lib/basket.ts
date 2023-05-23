@@ -19,7 +19,20 @@ export const fetchBasket = async (event: RequestEvent) => {
 		return basket;
 	} else {
 		const getBasket = new GetBasketQueryStore();
-		const { data } = await getBasket.fetch({ event, variables: { webId: basket } });
+		const { data, errors } = await getBasket.fetch({ event, variables: { webId: basket } });
+		if (errors) {
+			const createBasket = new CreateBasketMutationStore();
+
+			const response = await createBasket.mutate({}, { event });
+
+			basket = {
+				...response?.data?.createBasket
+			};
+			event.cookies.set('basket', basket.webId, {
+				path: '/'
+			});
+			return basket;
+		}
 
 		basket = {
 			...data?.basket
