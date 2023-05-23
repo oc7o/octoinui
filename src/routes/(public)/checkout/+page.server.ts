@@ -1,6 +1,7 @@
 import { setSession, getSession } from '$houdini';
 import { graphql } from '$houdini';
 import { redirect, type RequestEvent } from '@sveltejs/kit';
+import { addToast } from '$lib/notifications.js';
 
 /** @type {import('./$types').Actions} */
 export const actions = {
@@ -41,9 +42,18 @@ export const actions = {
 			}
 		`;
 
-		const { data } = await createOrder.mutate(variables, { event });
-
-		throw redirect(303, data.createOrder.invoice.invoiceUrl);
+		const { data, errors } = await createOrder.mutate(variables, { event });
+		if (errors) {
+			addToast({
+				message: 'An error occured. Please try again.',
+				type: 'error',
+				dismissible: true,
+				timeout: 5000
+			});
+			// throw redirect(303, '/checkout');
+		} else {
+			throw redirect(303, data.createOrder.invoice.invoiceUrl);
+		}
 	}
 	// captcha: async (event: RequestEvent) => {
 	// 	const captcha = graphql`
