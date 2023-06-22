@@ -15,5 +15,12 @@ export const load = async (event) => {
 		variables: { basketWebId: event.cookies.get('basket') }
 	});
 
+	console.log('delete basket');
+
+	event.cookies.set('basket', '', {
+		path: '/',
+		maxAge: 0
+	});
+
 	return res;
 };

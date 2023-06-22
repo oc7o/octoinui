@@ -12,6 +12,9 @@ export const _houdini_load = graphql`
 			status
 			createdAt
 			totalPrice
+			invoice {
+				invoiceId
+			}
 			basket {
 				vendorBasketObjects {
 					productInventory {
